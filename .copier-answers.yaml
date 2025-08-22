@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier
+_commit: 3a223c6
+_src_path: https://github.com/python-project-templates/base.git
+add_docs: true
+add_extension: python
+add_wiki: false
+email: prettygoodcapital@gmail.com
+github: prettygoodcapital
+project_description: Standard financial plots
+project_name: finance plots
+python_version_primary: '3.11'
+team: PrettyGoodCapital
