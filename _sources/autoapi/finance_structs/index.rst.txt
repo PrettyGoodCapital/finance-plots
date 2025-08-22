@@ -1,7 +1,7 @@
-finance_plots
-=============
+finance_structs
+===============
 
-.. py:module:: finance_plots
+.. py:module:: finance_structs
 
 
 Attributes
@@ -9,7 +9,7 @@ Attributes
 
 .. autoapisummary::
 
-   finance_plots.__version__
+   finance_structs.__version__
 
 
 Package Contents
