@@ -1,0 +1,21 @@
+finance_plots
+=============
+
+.. py:module:: finance_plots
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   finance_plots.__version__
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   :value: '0.1.0'
+
+
