@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API Reference" href="autoapi/index.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Examples" href="docs/src/EXAMPLES.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
         <title>finance plots v0.1.0</title>
@@ -197,11 +197,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="autoapi/test_all/index.html">test_all</a></li>
-<li class="toctree-l2"><a class="reference internal" href="autoapi/finance_plots/index.html">finance_plots</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/EXAMPLES.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/API.html">API</a></li>
 </ul>
 
 </div>
@@ -244,16 +241,140 @@
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="finance-plots">
 <h1>finance plots<a class="headerlink" href="#finance-plots" title="Link to this heading">¶</a></h1>
-<p>Standard financial plots</p>
+<p>Matplotlib plots and performance tables for financial return series, price
+paths, and technical-indicator panels.</p>
 <p><a class="reference external" href="https://github.com/prettygoodcapital/finance-plots/actions/workflows/build.yaml"><img alt="Build Status" src="https://github.com/prettygoodcapital/finance-plots/actions/workflows/build.yaml/badge.svg?branch=main&amp;event=push" /></a>
 <a class="reference external" href="https://codecov.io/gh/prettygoodcapital/finance-plots"><img alt="codecov" src="https://codecov.io/gh/prettygoodcapital/finance-plots/branch/main/graph/badge.svg" /></a>
 <a class="reference external" href="https://github.com/prettygoodcapital/finance-plots"><img alt="License" src="https://img.shields.io/github/license/prettygoodcapital/finance-plots" /></a>
 <a class="reference external" href="https://pypi.python.org/pypi/finance-plots"><img alt="PyPI" src="https://img.shields.io/pypi/v/finance-plots.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This library was generated using <a class="reference external" href="https://copier.readthedocs.io/en/stable/">copier</a> from the <a class="reference external" href="https://github.com/python-project-templates/base">Base Python Project Template repository</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">finance-plots</span></code> is the presentation layer for the finance stack. It accepts
+Narwhals-compatible inputs such as pandas, Polars, numpy, and other supported
+series-like objects, then returns ordinary matplotlib figures or Great Tables
+objects that can be saved, embedded in notebooks, or composed into tearsheets.</p>
+<p>The initial release focuses on a compact, useful surface:</p>
+<ul class="simple">
+<li><p>Return/risk plots for cumulative returns, rolling volatility, rolling Sharpe,
+rolling beta/correlation, benchmark scatter, drawdowns, and period-return
+views.</p></li>
+<li><p>Technical-indicator plots for price overlays, secondary-axis indicators, and
+indicator sub-panels.</p></li>
+<li><p>Performance summary tables backed by <code class="docutils literal notranslate"><span class="pre">great-tables</span></code>.</p></li>
+</ul>
+</section>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>finance-plots
+</pre></div>
+</div>
+<p>The gallery and documentation examples use the released data/calculation stack:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;finance-plots[examples]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h2>
+<p>Generate deterministic prices with <code class="docutils literal notranslate"><span class="pre">finance-datagen</span></code>, compute returns with
+<code class="docutils literal notranslate"><span class="pre">finance-calcs</span></code>, and plot them with <code class="docutils literal notranslate"><span class="pre">finance-plots</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">finance_datagen</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_prices</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">finance_calcs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">finance_plots</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fp</span>
+
+<span class="n">start_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">prices</span> <span class="o">=</span> <span class="n">generate_prices</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;ACME&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">start_ms</span><span class="o">=</span><span class="n">start_ms</span><span class="p">)</span>
+<span class="n">returns</span> <span class="o">=</span> <span class="n">prices</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+    <span class="n">fc</span><span class="o">.</span><span class="n">simple_returns</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ret&quot;</span><span class="p">),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;ret&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">()[</span><span class="s2">&quot;ret&quot;</span><span class="p">]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_rolling_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="current-plot-catalog">
+<h2>Current Plot Catalog<a class="headerlink" href="#current-plot-catalog" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Use it for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_returns(returns)</span></code></p></td>
+<td><p>Simple cumulative return path</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_returns(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">live_start=None)</span></code></p></td>
+<td><p>Cumulative return path with optional benchmark and out-of-sample shading</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_volatility(returns,</span> <span class="pre">window=63)</span></code></p></td>
+<td><p>Rolling annualized volatility</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_sharpe(returns,</span> <span class="pre">window=63)</span></code></p></td>
+<td><p>Rolling annualized Sharpe ratio</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_beta(returns,</span> <span class="pre">benchmark,</span> <span class="pre">window=63)</span></code></p></td>
+<td><p>Rolling beta versus a benchmark</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_correlation(returns,</span> <span class="pre">benchmark,</span> <span class="pre">window=63)</span></code></p></td>
+<td><p>Rolling correlation versus a benchmark</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_return_scatter(returns,</span> <span class="pre">benchmark)</span></code></p></td>
+<td><p>Strategy returns against benchmark returns with a fitted beta line</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_drawdown_underwater(returns)</span></code></p></td>
+<td><p>Filled underwater drawdown chart</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_returns_heatmap(returns,</span> <span class="pre">period=&quot;month&quot;)</span></code></p></td>
+<td><p>Year-by-month, year-by-quarter, or year-by-week return heatmap</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_returns_bar(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code></p></td>
+<td><p>Compounded period returns as a bar chart</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_returns_dist(returns,</span> <span class="pre">period=&quot;month&quot;)</span></code></p></td>
+<td><p>Distribution of compounded period returns</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_returns_timeseries(returns,</span> <span class="pre">period=&quot;month&quot;)</span></code></p></td>
+<td><p>Compounded period returns through time</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_price_with_overlays(price,</span> <span class="pre">overlays,</span> <span class="pre">secondary_overlays)</span></code></p></td>
+<td><p>Price line with moving averages and secondary-axis indicators</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_indicator_panel(price,</span> <span class="pre">panels)</span></code></p></td>
+<td><p>Price chart with one or more aligned indicator sub-panels</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="current-table-catalog">
+<h2>Current Table Catalog<a class="headerlink" href="#current-table-catalog" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Use it for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">perf_stats(returns)</span></code></p></td>
+<td><p>Dictionary of cumulative return, annualized return/volatility, Sharpe, Sortino, max drawdown, and Calmar</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_perf_stats(returns,</span> <span class="pre">benchmark=None)</span></code></p></td>
+<td><p>Great Tables performance summary with optional benchmark column</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_period_returns(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code></p></td>
+<td><p>Great Tables period-return summary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_drawdowns(returns,</span> <span class="pre">top=5)</span></code></p></td>
+<td><p>Great Tables largest-drawdown-period summary</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 </section>
@@ -263,12 +384,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="autoapi/index.html">
+          <a class="next-page" href="docs/src/EXAMPLES.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API Reference</div>
+                <div class="title">Examples</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
