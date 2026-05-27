@@ -1,13 +1,8 @@
-"""finance-plots — plotting and table helpers."""
+"""finance-plots — plot helpers."""
 
-from __future__ import annotations
-
-__version__ = "0.1.0"
-
-from .plots import (  # noqa: F401
+from ._indicators import plot_indicator_panel, plot_price_with_overlays
+from ._returns import (
     plot_drawdown_underwater,
-    plot_indicator_panel,
-    plot_price_with_overlays,
     plot_return_scatter,
     plot_returns,
     plot_returns_bar,
@@ -19,12 +14,6 @@ from .plots import (  # noqa: F401
     plot_rolling_returns,
     plot_rolling_sharpe,
     plot_rolling_volatility,
-)
-from .tables import (  # noqa: F401
-    perf_stats,
-    table_drawdowns,
-    table_perf_stats,
-    table_period_returns,
 )
 
 __all__ = [
@@ -42,8 +31,4 @@ __all__ = [
     "plot_returns_timeseries",
     "plot_indicator_panel",
     "plot_price_with_overlays",
-    "perf_stats",
-    "table_perf_stats",
-    "table_period_returns",
-    "table_drawdowns",
 ]

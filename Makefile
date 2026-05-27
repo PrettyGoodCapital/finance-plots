@@ -27,16 +27,16 @@ lint-py:  ## lint python with ruff
 	python -m ruff format --check finance_plots
 
 lint-docs:  ## lint docs with mdformat and codespell
-	python -m mdformat --check README.md 
-	python -m codespell_lib README.md 
+	python -m mdformat --check README.md docs/src/*.md
+	python -m codespell_lib README.md docs/src/*.md
 
 fix-py:  ## autoformat python code with ruff
 	python -m ruff check --fix finance_plots
 	python -m ruff format finance_plots
 
 fix-docs:  ## autoformat docs with mdformat and codespell
-	python -m mdformat README.md 
-	python -m codespell_lib --write README.md 
+	python -m mdformat README.md docs/src/*.md
+	python -m codespell_lib --write README.md docs/src/*.md
 
 lint: lint-py lint-docs  ## run all linters
 lints: lint
