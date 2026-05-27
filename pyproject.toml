@@ -29,14 +29,27 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 
-dependencies = []
+dependencies = [
+    "great-tables>=0.10",
+    "matplotlib>=3.7",
+    "narwhals>=1.0",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "polars>=1.0",
+]
 
 [project.optional-dependencies]
+examples = [
+    "finance-calcs>=0.1,<0.2",
+    "finance-datagen>=0.2.1,<0.3",
+]
 develop = [
     "build",
     "bump-my-version",
     "check-dist",
     "codespell",
+    "finance-calcs>=0.1,<0.2",
+    "finance-datagen>=0.2.1,<0.3",
     "hatchling",
     "mdformat",
     "mdformat-tables>=1",
@@ -47,9 +60,11 @@ develop = [
     "ty",
     "uv",
     "wheel",
+    "yardang",
 ]
 
 [project.scripts]
+finance-plots-gallery = "finance_plots.gallery:main"
 
 [project.urls]
 Repository = "https://github.com/prettygoodcapital/finance-plots"
@@ -142,6 +157,9 @@ section-order = [
 [tool.yardang]
 title = "finance plots"
 root = "README.md"
-pages = []
-use-autoapi = true
+pages = [
+    "docs/src/EXAMPLES.md",
+    "docs/src/API.md",
+]
+use-autoapi = false
 
