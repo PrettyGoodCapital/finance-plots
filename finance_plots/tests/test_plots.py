@@ -155,6 +155,92 @@ def test_additional_tables(returns_series):
     assert "Drawdown periods" in drawdown_html
 
 
+@pytest.fixture
+def post_trade_frame() -> pd.DataFrame:
+    idx = pd.date_range("2024-01-02", periods=6, freq="B")
+    return pd.DataFrame(
+        {
+            "timestamp": idx,
+            "component": ["commission", "fees", "slippage", "spread", "market_impact", "commission"],
+            "total": [12.0, 4.0, 15.0, 6.0, 3.0, 8.0],
+            "mae": [-0.04, -0.02, -0.08, -0.01, -0.03, -0.06],
+            "mfe": [0.10, 0.04, 0.12, 0.03, 0.07, 0.05],
+            "side": ["long", "short", "long", "short", "long", "short"],
+            "implementation_shortfall_bps": [12.0, 8.0, -4.0, 15.0, 3.0, 10.0],
+            "pnl": [100.0, -50.0, 75.0, -20.0, 30.0, 10.0],
+        }
+    )
+
+
+@pytest.fixture
+def alpha_frame() -> pd.DataFrame:
+    idx = pd.date_range("2024-01-02", periods=40, freq="B")
+    rng = np.random.default_rng(123)
+    ic = pd.Series(rng.normal(0.04, 0.08, len(idx)), index=idx, name="ic")
+    return pd.DataFrame(
+        {
+            "date": idx,
+            "ic": ic.to_numpy(),
+            "group": np.where(np.arange(len(idx)) % 2 == 0, "Tech", "Energy"),
+            "quantile": np.tile(np.arange(5), 8),
+            "return": np.tile(np.linspace(-0.01, 0.02, 5), 8) + rng.normal(0.0, 0.002, len(idx)),
+            "turnover": rng.uniform(0.1, 0.4, len(idx)),
+            "factor_return": rng.normal(0.0004, 0.01, len(idx)),
+            "count": rng.integers(20, 40, len(idx)),
+            "signal_mean": rng.normal(0.0, 0.2, len(idx)),
+        }
+    )
+
+
+def test_post_trade_plots(post_trade_frame):
+    figures = [
+        fp.plot_trading_cost_breakdown_bar(post_trade_frame),
+        fp.plot_mfe_mae_scatter(post_trade_frame),
+        fp.plot_execution_quality(post_trade_frame),
+    ]
+
+    assert all(isinstance(fig, Figure) for fig in figures)
+
+
+def test_post_trade_tables(post_trade_frame):
+    cost_html = fp.table_cost_breakdown(post_trade_frame).as_raw_html()
+    round_trip_html = fp.table_round_trip_stats(post_trade_frame).as_raw_html()
+    execution_html = fp.table_execution_quality(post_trade_frame).as_raw_html()
+
+    assert "Cost breakdown" in cost_html
+    assert "Round-trip statistics" in round_trip_html
+    assert "Execution quality" in execution_html
+
+
+def test_alpha_analysis_plots(alpha_frame):
+    ic = alpha_frame.set_index("date")["ic"]
+    figures = [
+        fp.plot_ic_ts(ic),
+        fp.plot_ic_hist(ic),
+        fp.plot_ic_qq(ic),
+        fp.plot_ic_by_group(alpha_frame),
+        fp.plot_ic_heatmap(ic, period="month"),
+        fp.plot_rolling_ic(ic, window=10),
+        fp.plot_quantile_returns_bar(alpha_frame),
+        fp.plot_top_bottom_quantile_turnover(alpha_frame),
+        fp.plot_cumulative_factor_returns(alpha_frame.set_index("date")["factor_return"]),
+    ]
+
+    assert all(isinstance(fig, Figure) for fig in figures)
+
+
+def test_alpha_analysis_tables(alpha_frame):
+    info_html = fp.table_information(alpha_frame["ic"]).as_raw_html()
+    quantile_html = fp.table_returns_by_quantile(alpha_frame).as_raw_html()
+    turnover_html = fp.table_turnover(alpha_frame).as_raw_html()
+    stats_html = fp.table_quantile_statistics(alpha_frame).as_raw_html()
+
+    assert "Information coefficient" in info_html
+    assert "Returns by quantile" in quantile_html
+    assert "Quantile turnover" in turnover_html
+    assert "Quantile statistics" in stats_html
+
+
 def test_accepts_polars(returns_series):
     import polars as pl
 
@@ -253,6 +339,18 @@ def test_generate_gallery_writes_every_public_artifact(tmp_path):
         "plot_returns_timeseries": "plot_returns_timeseries.png",
         "plot_indicator_panel": "plot_indicator_panel.png",
         "plot_price_with_overlays": "plot_price_with_overlays.png",
+        "plot_trading_cost_breakdown_bar": "plot_trading_cost_breakdown_bar.png",
+        "plot_mfe_mae_scatter": "plot_mfe_mae_scatter.png",
+        "plot_execution_quality": "plot_execution_quality.png",
+        "plot_ic_ts": "plot_ic_ts.png",
+        "plot_ic_hist": "plot_ic_hist.png",
+        "plot_ic_qq": "plot_ic_qq.png",
+        "plot_ic_by_group": "plot_ic_by_group.png",
+        "plot_ic_heatmap": "plot_ic_heatmap.png",
+        "plot_rolling_ic": "plot_rolling_ic.png",
+        "plot_quantile_returns_bar": "plot_quantile_returns_bar.png",
+        "plot_top_bottom_quantile_turnover": "plot_top_bottom_quantile_turnover.png",
+        "plot_cumulative_factor_returns": "plot_cumulative_factor_returns.png",
         "perf_stats": "perf_stats.md",
         "table_perf_stats": "table_perf_stats.html",
         "table_perf_stats_markdown": "table_perf_stats.md",
@@ -260,6 +358,20 @@ def test_generate_gallery_writes_every_public_artifact(tmp_path):
         "table_period_returns_markdown": "table_period_returns.md",
         "table_drawdowns": "table_drawdowns.html",
         "table_drawdowns_markdown": "table_drawdowns.md",
+        "table_cost_breakdown": "table_cost_breakdown.html",
+        "table_cost_breakdown_markdown": "table_cost_breakdown.md",
+        "table_round_trip_stats": "table_round_trip_stats.html",
+        "table_round_trip_stats_markdown": "table_round_trip_stats.md",
+        "table_execution_quality": "table_execution_quality.html",
+        "table_execution_quality_markdown": "table_execution_quality.md",
+        "table_information": "table_information.html",
+        "table_information_markdown": "table_information.md",
+        "table_returns_by_quantile": "table_returns_by_quantile.html",
+        "table_returns_by_quantile_markdown": "table_returns_by_quantile.md",
+        "table_turnover": "table_turnover.html",
+        "table_turnover_markdown": "table_turnover.md",
+        "table_quantile_statistics": "table_quantile_statistics.html",
+        "table_quantile_statistics_markdown": "table_quantile_statistics.md",
     }
 
     outputs = generate_gallery(tmp_path)
@@ -280,7 +392,11 @@ def test_gallery_markdown_artifacts_render_inline_tables(tmp_path):
     perf_stats = outputs["perf_stats"].read_text(encoding="utf-8")
     table_perf = outputs["table_perf_stats_markdown"].read_text(encoding="utf-8")
     drawdowns = outputs["table_drawdowns_markdown"].read_text(encoding="utf-8")
+    cost_breakdown = outputs["table_cost_breakdown_markdown"].read_text(encoding="utf-8")
+    information = outputs["table_information_markdown"].read_text(encoding="utf-8")
 
     assert "| Metric | Value |" in perf_stats
     assert "Sharpe ratio" in table_perf
     assert "Drawdown" in drawdowns
+    assert "Component" in cost_breakdown
+    assert "Mean IC" in information
