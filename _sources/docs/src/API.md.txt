@@ -18,10 +18,29 @@ from finance_plots import (
     plot_returns_timeseries,
     plot_indicator_panel,
     plot_price_with_overlays,
+    plot_trading_cost_breakdown_bar,
+    plot_mfe_mae_scatter,
+    plot_execution_quality,
+    plot_ic_ts,
+    plot_ic_hist,
+    plot_ic_qq,
+    plot_ic_by_group,
+    plot_ic_heatmap,
+    plot_rolling_ic,
+    plot_quantile_returns_bar,
+    plot_top_bottom_quantile_turnover,
+    plot_cumulative_factor_returns,
     perf_stats,
     table_perf_stats,
     table_period_returns,
     table_drawdowns,
+    table_cost_breakdown,
+    table_round_trip_stats,
+    table_execution_quality,
+    table_information,
+    table_returns_by_quantile,
+    table_turnover,
+    table_quantile_statistics,
 )
 ```
 
@@ -120,6 +139,82 @@ Price chart with configurable aligned indicator sub-panels.
 
 ![plot_indicator_panel](../assets/gallery/plot_indicator_panel.png)
 
+## Post-Trade Plots
+
+### `plot_trading_cost_breakdown_bar(costs, component_col="component", value_col="total", ax=None)`
+
+Trading cost attribution by component.
+
+![plot_trading_cost_breakdown_bar](../assets/gallery/plot_trading_cost_breakdown_bar.png)
+
+### `plot_mfe_mae_scatter(trades, mae_col="mae", mfe_col="mfe", side_col="side", ax=None)`
+
+Maximum adverse versus favorable excursion by trade.
+
+![plot_mfe_mae_scatter](../assets/gallery/plot_mfe_mae_scatter.png)
+
+### `plot_execution_quality(executions, slippage_col="implementation_shortfall_bps", bins=20, ax=None)`
+
+Distribution of implementation-shortfall slippage in basis points.
+
+![plot_execution_quality](../assets/gallery/plot_execution_quality.png)
+
+## Alpha-Analysis Plots
+
+### `plot_ic_ts(ic, rolling_window=21, ax=None)`
+
+Information-coefficient time series with a rolling mean overlay.
+
+![plot_ic_ts](../assets/gallery/plot_ic_ts.png)
+
+### `plot_ic_hist(ic, bins=20, ax=None)`
+
+Information-coefficient distribution.
+
+![plot_ic_hist](../assets/gallery/plot_ic_hist.png)
+
+### `plot_ic_qq(ic, ax=None)`
+
+Information-coefficient Q-Q plot against a normal distribution.
+
+![plot_ic_qq](../assets/gallery/plot_ic_qq.png)
+
+### `plot_ic_by_group(data, group_col="group", ic_col="ic", ax=None)`
+
+Mean information coefficient by group.
+
+![plot_ic_by_group](../assets/gallery/plot_ic_by_group.png)
+
+### `plot_ic_heatmap(ic, period="month", ax=None)`
+
+Calendar heatmap of mean information coefficient.
+
+![plot_ic_heatmap](../assets/gallery/plot_ic_heatmap.png)
+
+### `plot_rolling_ic(ic, window=21, ax=None)`
+
+Rolling mean information coefficient.
+
+![plot_rolling_ic](../assets/gallery/plot_rolling_ic.png)
+
+### `plot_quantile_returns_bar(data, quantile_col="quantile", return_col="return", ax=None)`
+
+Mean forward return by signal quantile.
+
+![plot_quantile_returns_bar](../assets/gallery/plot_quantile_returns_bar.png)
+
+### `plot_top_bottom_quantile_turnover(data, quantile_col="quantile", turnover_col="turnover", ax=None)`
+
+Turnover for the bottom and top signal quantiles.
+
+![plot_top_bottom_quantile_turnover](../assets/gallery/plot_top_bottom_quantile_turnover.png)
+
+### `plot_cumulative_factor_returns(factor_returns, ax=None)`
+
+Compounded long-short factor return path.
+
+![plot_cumulative_factor_returns](../assets/gallery/plot_cumulative_factor_returns.png)
+
 ## Performance Tables
 
 ### `perf_stats(returns, periods_per_year=252)`
@@ -150,6 +245,59 @@ Build a Great Tables table of compounded period returns.
 Build a Great Tables table of the largest drawdown periods.
 
 ```{include} ../assets/gallery/table_drawdowns.md
+```
+
+## Post-Trade Tables
+
+### `table_cost_breakdown(costs, component_col="component", value_col="total")`
+
+Build a Great Tables trading-cost attribution summary.
+
+```{include} ../assets/gallery/table_cost_breakdown.md
+```
+
+### `table_round_trip_stats(trades, pnl_col="pnl")`
+
+Build a Great Tables round-trip trade-quality summary.
+
+```{include} ../assets/gallery/table_round_trip_stats.md
+```
+
+### `table_execution_quality(executions, slippage_col="implementation_shortfall_bps")`
+
+Build a Great Tables implementation-shortfall summary.
+
+```{include} ../assets/gallery/table_execution_quality.md
+```
+
+## Alpha-Analysis Tables
+
+### `table_information(ic)`
+
+Build a Great Tables information-coefficient summary.
+
+```{include} ../assets/gallery/table_information.md
+```
+
+### `table_returns_by_quantile(data, quantile_col="quantile", return_col="return")`
+
+Build a Great Tables mean-return-by-quantile table.
+
+```{include} ../assets/gallery/table_returns_by_quantile.md
+```
+
+### `table_turnover(data, quantile_col="quantile", turnover_col="turnover")`
+
+Build a Great Tables quantile-turnover summary.
+
+```{include} ../assets/gallery/table_turnover.md
+```
+
+### `table_quantile_statistics(data, quantile_col="quantile", signal_col="signal_mean", count_col="count")`
+
+Build a Great Tables quantile count and signal-statistics summary.
+
+```{include} ../assets/gallery/table_quantile_statistics.md
 ```
 
 ## Example Artifact Helper
@@ -193,6 +341,30 @@ ______________________________________________________________________
 
 .. autofunction:: plot_indicator_panel
 
+.. autofunction:: plot_trading_cost_breakdown_bar
+
+.. autofunction:: plot_mfe_mae_scatter
+
+.. autofunction:: plot_execution_quality
+
+.. autofunction:: plot_ic_ts
+
+.. autofunction:: plot_ic_hist
+
+.. autofunction:: plot_ic_qq
+
+.. autofunction:: plot_ic_by_group
+
+.. autofunction:: plot_ic_heatmap
+
+.. autofunction:: plot_rolling_ic
+
+.. autofunction:: plot_quantile_returns_bar
+
+.. autofunction:: plot_top_bottom_quantile_turnover
+
+.. autofunction:: plot_cumulative_factor_returns
+
 .. autofunction:: perf_stats
 
 .. autofunction:: table_perf_stats
@@ -200,6 +372,20 @@ ______________________________________________________________________
 .. autofunction:: table_period_returns
 
 .. autofunction:: table_drawdowns
+
+.. autofunction:: table_cost_breakdown
+
+.. autofunction:: table_round_trip_stats
+
+.. autofunction:: table_execution_quality
+
+.. autofunction:: table_information
+
+.. autofunction:: table_returns_by_quantile
+
+.. autofunction:: table_turnover
+
+.. autofunction:: table_quantile_statistics
 
 
 .. currentmodule:: finance_plots.gallery

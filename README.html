@@ -259,6 +259,10 @@ views.</p></li>
 <li><p>Technical-indicator plots for price overlays, secondary-axis indicators, and
 indicator sub-panels.</p></li>
 <li><p>Performance summary tables backed by <code class="docutils literal notranslate"><span class="pre">great-tables</span></code>.</p></li>
+<li><p>Post-trade diagnostics for trading-cost breakdowns, MAE/MFE scatter, and
+execution-quality distributions.</p></li>
+<li><p>Alpha-analysis plots for IC, quantile returns, turnover, and cumulative
+factor returns.</p></li>
 </ul>
 </section>
 <section id="install">
@@ -345,6 +349,42 @@ indicator sub-panels.</p></li>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_indicator_panel(price,</span> <span class="pre">panels)</span></code></p></td>
 <td><p>Price chart with one or more aligned indicator sub-panels</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_trading_cost_breakdown_bar(costs)</span></code></p></td>
+<td><p>Trading cost attribution by component</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_mfe_mae_scatter(trades)</span></code></p></td>
+<td><p>Maximum adverse versus favorable excursion by trade</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_execution_quality(executions)</span></code></p></td>
+<td><p>Implementation-shortfall distribution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic)</span></code></p></td>
+<td><p>Information-coefficient time series with rolling mean</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_ic_hist(ic)</span></code></p></td>
+<td><p>Information-coefficient distribution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_ic_qq(ic)</span></code></p></td>
+<td><p>Information-coefficient Q-Q plot</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_ic_by_group(data)</span></code></p></td>
+<td><p>Mean IC by sector/group</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_ic_heatmap(ic)</span></code></p></td>
+<td><p>Calendar heatmap of mean IC</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_rolling_ic(ic)</span></code></p></td>
+<td><p>Rolling mean IC</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_quantile_returns_bar(data)</span></code></p></td>
+<td><p>Mean return by signal quantile</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plot_top_bottom_quantile_turnover(data)</span></code></p></td>
+<td><p>Top/bottom quantile turnover</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot_cumulative_factor_returns(factor_returns)</span></code></p></td>
+<td><p>Compounded long-short factor return path</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -370,6 +410,27 @@ indicator sub-panels.</p></li>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_drawdowns(returns,</span> <span class="pre">top=5)</span></code></p></td>
 <td><p>Great Tables largest-drawdown-period summary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_cost_breakdown(costs)</span></code></p></td>
+<td><p>Great Tables trading-cost attribution summary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_round_trip_stats(trades)</span></code></p></td>
+<td><p>Great Tables round-trip trade-quality summary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_execution_quality(executions)</span></code></p></td>
+<td><p>Great Tables implementation-shortfall summary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_information(ic)</span></code></p></td>
+<td><p>Great Tables information-coefficient summary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_returns_by_quantile(data)</span></code></p></td>
+<td><p>Great Tables mean return by quantile</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_turnover(data)</span></code></p></td>
+<td><p>Great Tables quantile-turnover summary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_quantile_statistics(data)</span></code></p></td>
+<td><p>Great Tables quantile counts and signal statistics</p></td>
 </tr>
 </tbody>
 </table>

@@ -245,11 +245,11 @@ then consume ordinary pandas Series, Polars Series, or numpy arrays.</p>
 <hr class="docutils" />
 <section id="shared-setup">
 <h2>Shared Setup<a class="headerlink" href="#shared-setup" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finance_datagen</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_prices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">finance_datagen</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_prices</span><span class="p">,</span> <span class="n">generate_signal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">finance_calcs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">finance_plots</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fp</span>
@@ -297,6 +297,61 @@ then consume ordinary pandas Series, Polars Series, or numpy arrays.</p>
 <span class="n">rsi14</span> <span class="o">=</span> <span class="n">as_series</span><span class="p">(</span><span class="n">price_frame</span><span class="p">,</span> <span class="s2">&quot;rsi14&quot;</span><span class="p">)</span>
 <span class="n">macd</span> <span class="o">=</span> <span class="n">as_series</span><span class="p">(</span><span class="n">price_frame</span><span class="p">,</span> <span class="s2">&quot;macd&quot;</span><span class="p">)</span>
 <span class="n">macd_signal</span> <span class="o">=</span> <span class="n">as_series</span><span class="p">(</span><span class="n">price_frame</span><span class="p">,</span> <span class="s2">&quot;macd_signal&quot;</span><span class="p">)</span>
+
+<span class="n">trade_transactions</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)],</span>
+        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ACME&quot;</span><span class="p">,</span> <span class="s2">&quot;ACME&quot;</span><span class="p">,</span> <span class="s2">&quot;ACME&quot;</span><span class="p">,</span> <span class="s2">&quot;BETA&quot;</span><span class="p">,</span> <span class="s2">&quot;BETA&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">60.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">],</span>
+        <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">106.0</span><span class="p">,</span> <span class="mf">96.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">],</span>
+        <span class="s2">&quot;commission&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="s2">&quot;fees&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
+        <span class="s2">&quot;bps&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">cost_breakdown</span> <span class="o">=</span> <span class="n">fc</span><span class="o">.</span><span class="n">cost_attribution</span><span class="p">(</span><span class="n">trade_transactions</span><span class="p">)</span>
+<span class="n">round_trips</span> <span class="o">=</span> <span class="n">fc</span><span class="o">.</span><span class="n">extract_round_trips</span><span class="p">(</span><span class="n">trade_transactions</span><span class="p">)</span>
+<span class="n">excursion_prices</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ACME&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;BETA&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">94.0</span><span class="p">,</span> <span class="mf">106.0</span><span class="p">,</span> <span class="mf">112.0</span><span class="p">,</span> <span class="mf">96.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">53.0</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">,</span> <span class="mf">43.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">trades_with_excursions</span> <span class="o">=</span> <span class="n">fc</span><span class="o">.</span><span class="n">mae_mfe</span><span class="p">(</span><span class="n">round_trips</span><span class="p">,</span> <span class="n">excursion_prices</span><span class="p">)</span>
+<span class="n">execution_quality</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2021-01-04&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;implementation_shortfall_bps&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">signals</span> <span class="o">=</span> <span class="n">generate_signal</span><span class="p">(</span><span class="n">n_dates</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">n_assets</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">]))</span>
+    <span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="s2">&quot;Tech&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">otherwise</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">lit</span><span class="p">(</span><span class="s2">&quot;Energy&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">signals</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">assign_quantile</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;quantile&quot;</span><span class="p">))</span>
+<span class="n">ic_frame</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">spearman_ic</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;fwd_returns&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ic&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+<span class="n">ic_by_group</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">spearman_ic</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;fwd_returns&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ic&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+<span class="n">changed</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">quantile_changed</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;quantile&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;changed&quot;</span><span class="p">))</span>
+<span class="n">turnover</span> <span class="o">=</span> <span class="n">changed</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">quantile_turnover</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;changed&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;turnover&quot;</span><span class="p">))</span>
+<span class="n">quantile_returns</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;fwd_returns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">),</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">),</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;signal_mean&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">alpha_frame</span> <span class="o">=</span> <span class="n">quantile_returns</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">turnover</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="n">factor_returns_frame</span> <span class="o">=</span> <span class="n">signals</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">fc</span><span class="o">.</span><span class="n">long_short_spread</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;fwd_returns&quot;</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;quantile&quot;</span><span class="p">),</span> <span class="n">upper</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;factor_return&quot;</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+<span class="n">ic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_frame</span><span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">ic_frame</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ic&quot;</span><span class="p">)</span>
+<span class="n">factor_returns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="n">factor_returns_frame</span><span class="p">[</span><span class="s2">&quot;factor_return&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">factor_returns_frame</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(),</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;factor_return&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -565,6 +620,279 @@ then consume ordinary pandas Series, Polars Series, or numpy arrays.</p>
 </table>
 </div>
 </section>
+<section id="post-trade-plots">
+<h2>Post-Trade Plots<a class="headerlink" href="#post-trade-plots" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cost_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_trading_cost_breakdown_bar</span><span class="p">(</span><span class="n">cost_breakdown</span><span class="p">)</span>
+<span class="n">mae_mfe_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_mfe_mae_scatter</span><span class="p">(</span><span class="n">trades_with_excursions</span><span class="p">)</span>
+<span class="n">execution_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_execution_quality</span><span class="p">(</span><span class="n">execution_quality</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="plot_trading_cost_breakdown_bar" src="../../_images/plot_trading_cost_breakdown_bar.png" /></p>
+<p><img alt="plot_mfe_mae_scatter" src="../../_images/plot_mfe_mae_scatter.png" /></p>
+<p><img alt="plot_execution_quality" src="../../_images/plot_execution_quality.png" /></p>
+</section>
+<section id="post-trade-tables">
+<h2>Post-Trade Tables<a class="headerlink" href="#post-trade-tables" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cost_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_cost_breakdown</span><span class="p">(</span><span class="n">cost_breakdown</span><span class="p">)</span>
+<span class="n">round_trip_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_round_trip_stats</span><span class="p">(</span><span class="n">round_trips</span><span class="p">)</span>
+<span class="n">execution_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_execution_quality</span><span class="p">(</span><span class="n">execution_quality</span><span class="p">)</span>
+</pre></div>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Total</p></th>
+<th class="head"><p>Pct total</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>commission</p></td>
+<td><p>5.00</p></td>
+<td><p>25.15%</p></td>
+</tr>
+<tr class="row-odd"><td><p>fees</p></td>
+<td><p>1.25</p></td>
+<td><p>6.29%</p></td>
+</tr>
+<tr class="row-even"><td><p>slippage</p></td>
+<td><p>13.63</p></td>
+<td><p>68.56%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Trades</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Win rate</p></td>
+<td><p>66.67%</p></td>
+</tr>
+<tr class="row-even"><td><p>Average PnL</p></td>
+<td><p>160.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total PnL</p></td>
+<td><p>480.00</p></td>
+</tr>
+<tr class="row-even"><td><p>Profit factor</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payoff ratio</p></td>
+<td><p>1.50</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Count</p></td>
+<td><p>12</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mean bps</p></td>
+<td><p>7.08</p></td>
+</tr>
+<tr class="row-even"><td><p>Median bps</p></td>
+<td><p>7.50</p></td>
+</tr>
+<tr class="row-odd"><td><p>Worst bps</p></td>
+<td><p>15.00</p></td>
+</tr>
+<tr class="row-even"><td><p>Best bps</p></td>
+<td><p>-3.00</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="alpha-ic-plots">
+<h2>Alpha IC Plots<a class="headerlink" href="#alpha-ic-plots" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ic_ts_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_ic_ts</span><span class="p">(</span><span class="n">ic</span><span class="p">)</span>
+<span class="n">ic_hist_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_ic_hist</span><span class="p">(</span><span class="n">ic</span><span class="p">)</span>
+<span class="n">ic_qq_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_ic_qq</span><span class="p">(</span><span class="n">ic</span><span class="p">)</span>
+<span class="n">ic_group_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_ic_by_group</span><span class="p">(</span><span class="n">ic_by_group</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">())</span>
+<span class="n">ic_heatmap_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_ic_heatmap</span><span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s2">&quot;month&quot;</span><span class="p">)</span>
+<span class="n">rolling_ic_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_rolling_ic</span><span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="plot_ic_ts" src="../../_images/plot_ic_ts.png" /></p>
+<p><img alt="plot_ic_hist" src="../../_images/plot_ic_hist.png" /></p>
+<p><img alt="plot_ic_qq" src="../../_images/plot_ic_qq.png" /></p>
+<p><img alt="plot_ic_by_group" src="../../_images/plot_ic_by_group.png" /></p>
+<p><img alt="plot_ic_heatmap" src="../../_images/plot_ic_heatmap.png" /></p>
+<p><img alt="plot_rolling_ic" src="../../_images/plot_rolling_ic.png" /></p>
+</section>
+<section id="alpha-quantile-plots">
+<h2>Alpha Quantile Plots<a class="headerlink" href="#alpha-quantile-plots" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quantile_bar_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_quantile_returns_bar</span><span class="p">(</span><span class="n">alpha_frame</span><span class="p">)</span>
+<span class="n">turnover_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_top_bottom_quantile_turnover</span><span class="p">(</span><span class="n">alpha_frame</span><span class="p">)</span>
+<span class="n">factor_return_fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_cumulative_factor_returns</span><span class="p">(</span><span class="n">factor_returns</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="plot_quantile_returns_bar" src="../../_images/plot_quantile_returns_bar.png" /></p>
+<p><img alt="plot_top_bottom_quantile_turnover" src="../../_images/plot_top_bottom_quantile_turnover.png" /></p>
+<p><img alt="plot_cumulative_factor_returns" src="../../_images/plot_cumulative_factor_returns.png" /></p>
+</section>
+<section id="alpha-analysis-tables">
+<h2>Alpha Analysis Tables<a class="headerlink" href="#alpha-analysis-tables" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">information_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_information</span><span class="p">(</span><span class="n">ic</span><span class="p">)</span>
+<span class="n">quantile_return_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_returns_by_quantile</span><span class="p">(</span><span class="n">alpha_frame</span><span class="p">)</span>
+<span class="n">turnover_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_turnover</span><span class="p">(</span><span class="n">alpha_frame</span><span class="p">)</span>
+<span class="n">quantile_stats_table</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">table_quantile_statistics</span><span class="p">(</span><span class="n">alpha_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean IC</p></td>
+<td><p>0.12</p></td>
+</tr>
+<tr class="row-odd"><td><p>IC volatility</p></td>
+<td><p>0.17</p></td>
+</tr>
+<tr class="row-even"><td><p>ICIR</p></td>
+<td><p>0.71</p></td>
+</tr>
+<tr class="row-odd"><td><p>t-stat</p></td>
+<td><p>6.38</p></td>
+</tr>
+<tr class="row-even"><td><p>Positive IC</p></td>
+<td><p>77.50%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Observations</p></td>
+<td><p>80</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Count</p></th>
+<th class="head"><p>Mean return</p></th>
+<th class="head"><p>Volatility</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>80</p></td>
+<td><p>-0.36%</p></td>
+<td><p>0.75%</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>80</p></td>
+<td><p>-0.02%</p></td>
+<td><p>0.70%</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>80</p></td>
+<td><p>-0.08%</p></td>
+<td><p>0.74%</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>80</p></td>
+<td><p>0.05%</p></td>
+<td><p>0.70%</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>80</p></td>
+<td><p>0.47%</p></td>
+<td><p>0.65%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Turnover</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>77.81%</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>78.12%</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>78.28%</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>78.59%</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>76.56%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Count</p></th>
+<th class="head"><p>Signal mean</p></th>
+<th class="head"><p>Signal std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>640</p></td>
+<td><p>-1.40</p></td>
+<td><p>0.21</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>640</p></td>
+<td><p>-0.53</p></td>
+<td><p>0.19</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>0.01</p></td>
+<td><p>0.18</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>640</p></td>
+<td><p>0.53</p></td>
+<td><p>0.16</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>640</p></td>
+<td><p>1.38</p></td>
+<td><p>0.24</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <hr class="docutils" />
 <section id="generate-every-example-artifact">
 <h2>Generate Every Example Artifact<a class="headerlink" href="#generate-every-example-artifact" title="Link to this heading">¶</a></h2>
@@ -647,6 +975,11 @@ then consume ordinary pandas Series, Polars Series, or numpy arrays.</p>
 <li><a class="reference internal" href="#performance-table">Performance Table</a></li>
 <li><a class="reference internal" href="#period-return-table">Period Return Table</a></li>
 <li><a class="reference internal" href="#drawdown-table">Drawdown Table</a></li>
+<li><a class="reference internal" href="#post-trade-plots">Post-Trade Plots</a></li>
+<li><a class="reference internal" href="#post-trade-tables">Post-Trade Tables</a></li>
+<li><a class="reference internal" href="#alpha-ic-plots">Alpha IC Plots</a></li>
+<li><a class="reference internal" href="#alpha-quantile-plots">Alpha Quantile Plots</a></li>
+<li><a class="reference internal" href="#alpha-analysis-tables">Alpha Analysis Tables</a></li>
 <li><a class="reference internal" href="#generate-every-example-artifact">Generate Every Example Artifact</a></li>
 </ul>
 </li>

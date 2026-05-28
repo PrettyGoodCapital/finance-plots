@@ -23,6 +23,10 @@ The initial release focuses on a compact, useful surface:
 - Technical-indicator plots for price overlays, secondary-axis indicators, and
   indicator sub-panels.
 - Performance summary tables backed by `great-tables`.
+- Post-trade diagnostics for trading-cost breakdowns, MAE/MFE scatter, and
+  execution-quality distributions.
+- Alpha-analysis plots for IC, quantile returns, turnover, and cumulative
+  factor returns.
 
 ## Install
 
@@ -77,6 +81,18 @@ fig = fp.plot_rolling_returns(returns)
 | `plot_returns_timeseries(returns, period="month")`               | Compounded period returns through time                                   |
 | `plot_price_with_overlays(price, overlays, secondary_overlays)`  | Price line with moving averages and secondary-axis indicators            |
 | `plot_indicator_panel(price, panels)`                            | Price chart with one or more aligned indicator sub-panels                |
+| `plot_trading_cost_breakdown_bar(costs)`                         | Trading cost attribution by component                                    |
+| `plot_mfe_mae_scatter(trades)`                                   | Maximum adverse versus favorable excursion by trade                      |
+| `plot_execution_quality(executions)`                             | Implementation-shortfall distribution                                    |
+| `plot_ic_ts(ic)`                                                 | Information-coefficient time series with rolling mean                    |
+| `plot_ic_hist(ic)`                                               | Information-coefficient distribution                                     |
+| `plot_ic_qq(ic)`                                                 | Information-coefficient Q-Q plot                                         |
+| `plot_ic_by_group(data)`                                         | Mean IC by sector/group                                                  |
+| `plot_ic_heatmap(ic)`                                            | Calendar heatmap of mean IC                                              |
+| `plot_rolling_ic(ic)`                                            | Rolling mean IC                                                          |
+| `plot_quantile_returns_bar(data)`                                | Mean return by signal quantile                                           |
+| `plot_top_bottom_quantile_turnover(data)`                        | Top/bottom quantile turnover                                             |
+| `plot_cumulative_factor_returns(factor_returns)`                 | Compounded long-short factor return path                                 |
 
 ## Current Table Catalog
 
@@ -86,3 +102,10 @@ fig = fp.plot_rolling_returns(returns)
 | `table_perf_stats(returns, benchmark=None)`    | Great Tables performance summary with optional benchmark column                                          |
 | `table_period_returns(returns, period="year")` | Great Tables period-return summary                                                                       |
 | `table_drawdowns(returns, top=5)`              | Great Tables largest-drawdown-period summary                                                             |
+| `table_cost_breakdown(costs)`                  | Great Tables trading-cost attribution summary                                                            |
+| `table_round_trip_stats(trades)`               | Great Tables round-trip trade-quality summary                                                            |
+| `table_execution_quality(executions)`          | Great Tables implementation-shortfall summary                                                            |
+| `table_information(ic)`                        | Great Tables information-coefficient summary                                                             |
+| `table_returns_by_quantile(data)`              | Great Tables mean return by quantile                                                                     |
+| `table_turnover(data)`                         | Great Tables quantile-turnover summary                                                                   |
+| `table_quantile_statistics(data)`              | Great Tables quantile counts and signal statistics                                                       |

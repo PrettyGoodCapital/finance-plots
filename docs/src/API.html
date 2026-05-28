@@ -255,10 +255,29 @@
     <span class="n">plot_returns_timeseries</span><span class="p">,</span>
     <span class="n">plot_indicator_panel</span><span class="p">,</span>
     <span class="n">plot_price_with_overlays</span><span class="p">,</span>
+    <span class="n">plot_trading_cost_breakdown_bar</span><span class="p">,</span>
+    <span class="n">plot_mfe_mae_scatter</span><span class="p">,</span>
+    <span class="n">plot_execution_quality</span><span class="p">,</span>
+    <span class="n">plot_ic_ts</span><span class="p">,</span>
+    <span class="n">plot_ic_hist</span><span class="p">,</span>
+    <span class="n">plot_ic_qq</span><span class="p">,</span>
+    <span class="n">plot_ic_by_group</span><span class="p">,</span>
+    <span class="n">plot_ic_heatmap</span><span class="p">,</span>
+    <span class="n">plot_rolling_ic</span><span class="p">,</span>
+    <span class="n">plot_quantile_returns_bar</span><span class="p">,</span>
+    <span class="n">plot_top_bottom_quantile_turnover</span><span class="p">,</span>
+    <span class="n">plot_cumulative_factor_returns</span><span class="p">,</span>
     <span class="n">perf_stats</span><span class="p">,</span>
     <span class="n">table_perf_stats</span><span class="p">,</span>
     <span class="n">table_period_returns</span><span class="p">,</span>
     <span class="n">table_drawdowns</span><span class="p">,</span>
+    <span class="n">table_cost_breakdown</span><span class="p">,</span>
+    <span class="n">table_round_trip_stats</span><span class="p">,</span>
+    <span class="n">table_execution_quality</span><span class="p">,</span>
+    <span class="n">table_information</span><span class="p">,</span>
+    <span class="n">table_returns_by_quantile</span><span class="p">,</span>
+    <span class="n">table_turnover</span><span class="p">,</span>
+    <span class="n">table_quantile_statistics</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -341,6 +360,72 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <h3><code class="docutils literal notranslate"><span class="pre">plot_indicator_panel(price,</span> <span class="pre">panels=None,</span> <span class="pre">figsize=None,</span> <span class="pre">title=None)</span></code><a class="headerlink" href="#plot-indicator-panel-price-panels-none-figsize-none-title-none" title="Link to this heading">¶</a></h3>
 <p>Price chart with configurable aligned indicator sub-panels.</p>
 <p><img alt="plot_indicator_panel" src="../../_images/plot_indicator_panel.png" /></p>
+</section>
+</section>
+<section id="post-trade-plots">
+<h2>Post-Trade Plots<a class="headerlink" href="#post-trade-plots" title="Link to this heading">¶</a></h2>
+<section id="plot-trading-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_trading_cost_breakdown_bar(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-trading-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none" title="Link to this heading">¶</a></h3>
+<p>Trading cost attribution by component.</p>
+<p><img alt="plot_trading_cost_breakdown_bar" src="../../_images/plot_trading_cost_breakdown_bar.png" /></p>
+</section>
+<section id="plot-mfe-mae-scatter-trades-mae-col-mae-mfe-col-mfe-side-col-side-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_mfe_mae_scatter(trades,</span> <span class="pre">mae_col=&quot;mae&quot;,</span> <span class="pre">mfe_col=&quot;mfe&quot;,</span> <span class="pre">side_col=&quot;side&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-mfe-mae-scatter-trades-mae-col-mae-mfe-col-mfe-side-col-side-ax-none" title="Link to this heading">¶</a></h3>
+<p>Maximum adverse versus favorable excursion by trade.</p>
+<p><img alt="plot_mfe_mae_scatter" src="../../_images/plot_mfe_mae_scatter.png" /></p>
+</section>
+<section id="plot-execution-quality-executions-slippage-col-implementation-shortfall-bps-bins-20-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_execution_quality(executions,</span> <span class="pre">slippage_col=&quot;implementation_shortfall_bps&quot;,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-execution-quality-executions-slippage-col-implementation-shortfall-bps-bins-20-ax-none" title="Link to this heading">¶</a></h3>
+<p>Distribution of implementation-shortfall slippage in basis points.</p>
+<p><img alt="plot_execution_quality" src="../../_images/plot_execution_quality.png" /></p>
+</section>
+</section>
+<section id="alpha-analysis-plots">
+<h2>Alpha-Analysis Plots<a class="headerlink" href="#alpha-analysis-plots" title="Link to this heading">¶</a></h2>
+<section id="plot-ic-ts-ic-rolling-window-21-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">rolling_window=21,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-ts-ic-rolling-window-21-ax-none" title="Link to this heading">¶</a></h3>
+<p>Information-coefficient time series with a rolling mean overlay.</p>
+<p><img alt="plot_ic_ts" src="../../_images/plot_ic_ts.png" /></p>
+</section>
+<section id="plot-ic-hist-ic-bins-20-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_hist(ic,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-hist-ic-bins-20-ax-none" title="Link to this heading">¶</a></h3>
+<p>Information-coefficient distribution.</p>
+<p><img alt="plot_ic_hist" src="../../_images/plot_ic_hist.png" /></p>
+</section>
+<section id="plot-ic-qq-ic-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_qq(ic,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-qq-ic-ax-none" title="Link to this heading">¶</a></h3>
+<p>Information-coefficient Q-Q plot against a normal distribution.</p>
+<p><img alt="plot_ic_qq" src="../../_images/plot_ic_qq.png" /></p>
+</section>
+<section id="plot-ic-by-group-data-group-col-group-ic-col-ic-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_by_group(data,</span> <span class="pre">group_col=&quot;group&quot;,</span> <span class="pre">ic_col=&quot;ic&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-by-group-data-group-col-group-ic-col-ic-ax-none" title="Link to this heading">¶</a></h3>
+<p>Mean information coefficient by group.</p>
+<p><img alt="plot_ic_by_group" src="../../_images/plot_ic_by_group.png" /></p>
+</section>
+<section id="plot-ic-heatmap-ic-period-month-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_heatmap(ic,</span> <span class="pre">period=&quot;month&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-heatmap-ic-period-month-ax-none" title="Link to this heading">¶</a></h3>
+<p>Calendar heatmap of mean information coefficient.</p>
+<p><img alt="plot_ic_heatmap" src="../../_images/plot_ic_heatmap.png" /></p>
+</section>
+<section id="plot-rolling-ic-ic-window-21-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_rolling_ic(ic,</span> <span class="pre">window=21,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-rolling-ic-ic-window-21-ax-none" title="Link to this heading">¶</a></h3>
+<p>Rolling mean information coefficient.</p>
+<p><img alt="plot_rolling_ic" src="../../_images/plot_rolling_ic.png" /></p>
+</section>
+<section id="plot-quantile-returns-bar-data-quantile-col-quantile-return-col-return-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_quantile_returns_bar(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">return_col=&quot;return&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-quantile-returns-bar-data-quantile-col-quantile-return-col-return-ax-none" title="Link to this heading">¶</a></h3>
+<p>Mean forward return by signal quantile.</p>
+<p><img alt="plot_quantile_returns_bar" src="../../_images/plot_quantile_returns_bar.png" /></p>
+</section>
+<section id="plot-top-bottom-quantile-turnover-data-quantile-col-quantile-turnover-col-turnover-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_top_bottom_quantile_turnover(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">turnover_col=&quot;turnover&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-top-bottom-quantile-turnover-data-quantile-col-quantile-turnover-col-turnover-ax-none" title="Link to this heading">¶</a></h3>
+<p>Turnover for the bottom and top signal quantiles.</p>
+<p><img alt="plot_top_bottom_quantile_turnover" src="../../_images/plot_top_bottom_quantile_turnover.png" /></p>
+</section>
+<section id="plot-cumulative-factor-returns-factor-returns-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_cumulative_factor_returns(factor_returns,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-cumulative-factor-returns-factor-returns-ax-none" title="Link to this heading">¶</a></h3>
+<p>Compounded long-short factor return path.</p>
+<p><img alt="plot_cumulative_factor_returns" src="../../_images/plot_cumulative_factor_returns.png" /></p>
 </section>
 </section>
 <section id="performance-tables">
@@ -503,6 +588,257 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <td><p>2021-09-01</p></td>
 <td><p>-5.70%</p></td>
 <td><p>20</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="post-trade-tables">
+<h2>Post-Trade Tables<a class="headerlink" href="#post-trade-tables" title="Link to this heading">¶</a></h2>
+<section id="table-cost-breakdown-costs-component-col-component-value-col-total">
+<h3><code class="docutils literal notranslate"><span class="pre">table_cost_breakdown(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;)</span></code><a class="headerlink" href="#table-cost-breakdown-costs-component-col-component-value-col-total" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables trading-cost attribution summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Total</p></th>
+<th class="head"><p>Pct total</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>commission</p></td>
+<td><p>5.00</p></td>
+<td><p>25.15%</p></td>
+</tr>
+<tr class="row-odd"><td><p>fees</p></td>
+<td><p>1.25</p></td>
+<td><p>6.29%</p></td>
+</tr>
+<tr class="row-even"><td><p>slippage</p></td>
+<td><p>13.63</p></td>
+<td><p>68.56%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-round-trip-stats-trades-pnl-col-pnl">
+<h3><code class="docutils literal notranslate"><span class="pre">table_round_trip_stats(trades,</span> <span class="pre">pnl_col=&quot;pnl&quot;)</span></code><a class="headerlink" href="#table-round-trip-stats-trades-pnl-col-pnl" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables round-trip trade-quality summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Trades</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Win rate</p></td>
+<td><p>66.67%</p></td>
+</tr>
+<tr class="row-even"><td><p>Average PnL</p></td>
+<td><p>160.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total PnL</p></td>
+<td><p>480.00</p></td>
+</tr>
+<tr class="row-even"><td><p>Profit factor</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payoff ratio</p></td>
+<td><p>1.50</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-execution-quality-executions-slippage-col-implementation-shortfall-bps">
+<h3><code class="docutils literal notranslate"><span class="pre">table_execution_quality(executions,</span> <span class="pre">slippage_col=&quot;implementation_shortfall_bps&quot;)</span></code><a class="headerlink" href="#table-execution-quality-executions-slippage-col-implementation-shortfall-bps" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables implementation-shortfall summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Count</p></td>
+<td><p>12</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mean bps</p></td>
+<td><p>7.08</p></td>
+</tr>
+<tr class="row-even"><td><p>Median bps</p></td>
+<td><p>7.50</p></td>
+</tr>
+<tr class="row-odd"><td><p>Worst bps</p></td>
+<td><p>15.00</p></td>
+</tr>
+<tr class="row-even"><td><p>Best bps</p></td>
+<td><p>-3.00</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="alpha-analysis-tables">
+<h2>Alpha-Analysis Tables<a class="headerlink" href="#alpha-analysis-tables" title="Link to this heading">¶</a></h2>
+<section id="table-information-ic">
+<h3><code class="docutils literal notranslate"><span class="pre">table_information(ic)</span></code><a class="headerlink" href="#table-information-ic" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables information-coefficient summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean IC</p></td>
+<td><p>0.12</p></td>
+</tr>
+<tr class="row-odd"><td><p>IC volatility</p></td>
+<td><p>0.17</p></td>
+</tr>
+<tr class="row-even"><td><p>ICIR</p></td>
+<td><p>0.71</p></td>
+</tr>
+<tr class="row-odd"><td><p>t-stat</p></td>
+<td><p>6.38</p></td>
+</tr>
+<tr class="row-even"><td><p>Positive IC</p></td>
+<td><p>77.50%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Observations</p></td>
+<td><p>80</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-returns-by-quantile-data-quantile-col-quantile-return-col-return">
+<h3><code class="docutils literal notranslate"><span class="pre">table_returns_by_quantile(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">return_col=&quot;return&quot;)</span></code><a class="headerlink" href="#table-returns-by-quantile-data-quantile-col-quantile-return-col-return" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables mean-return-by-quantile table.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Count</p></th>
+<th class="head"><p>Mean return</p></th>
+<th class="head"><p>Volatility</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>80</p></td>
+<td><p>-0.36%</p></td>
+<td><p>0.75%</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>80</p></td>
+<td><p>-0.02%</p></td>
+<td><p>0.70%</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>80</p></td>
+<td><p>-0.08%</p></td>
+<td><p>0.74%</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>80</p></td>
+<td><p>0.05%</p></td>
+<td><p>0.70%</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>80</p></td>
+<td><p>0.47%</p></td>
+<td><p>0.65%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-turnover-data-quantile-col-quantile-turnover-col-turnover">
+<h3><code class="docutils literal notranslate"><span class="pre">table_turnover(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">turnover_col=&quot;turnover&quot;)</span></code><a class="headerlink" href="#table-turnover-data-quantile-col-quantile-turnover-col-turnover" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables quantile-turnover summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Turnover</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>77.81%</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>78.12%</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>78.28%</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>78.59%</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>76.56%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-quantile-statistics-data-quantile-col-quantile-signal-col-signal-mean-count-col-count">
+<h3><code class="docutils literal notranslate"><span class="pre">table_quantile_statistics(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">signal_col=&quot;signal_mean&quot;,</span> <span class="pre">count_col=&quot;count&quot;)</span></code><a class="headerlink" href="#table-quantile-statistics-data-quantile-col-quantile-signal-col-signal-mean-count-col-count" title="Link to this heading">¶</a></h3>
+<p>Build a Great Tables quantile count and signal-statistics summary.</p>
+<!-- markdownlint-disable-file MD041 -->
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantile</p></th>
+<th class="head"><p>Count</p></th>
+<th class="head"><p>Signal mean</p></th>
+<th class="head"><p>Signal std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>640</p></td>
+<td><p>-1.40</p></td>
+<td><p>0.21</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>640</p></td>
+<td><p>-0.53</p></td>
+<td><p>0.19</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>0.01</p></td>
+<td><p>0.18</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>640</p></td>
+<td><p>0.53</p></td>
+<td><p>0.16</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>640</p></td>
+<td><p>1.38</p></td>
+<td><p>0.24</p></td>
 </tr>
 </tbody>
 </table>
@@ -821,6 +1157,78 @@ where <code class="docutils literal notranslate"><span class="pre">N</span></cod
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_trading_cost_breakdown_bar">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_trading_cost_breakdown_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'component'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'total'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_post_trade.html#plot_trading_cost_breakdown_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_trading_cost_breakdown_bar" title="Link to this definition">¶</a></dt>
+<dd><p>Plot total trading cost by component.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_mfe_mae_scatter">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_mfe_mae_scatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trades</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mae_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mae'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mfe_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mfe'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'side'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_post_trade.html#plot_mfe_mae_scatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_mfe_mae_scatter" title="Link to this definition">¶</a></dt>
+<dd><p>Plot maximum adverse versus favorable excursion by trade.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_execution_quality">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_execution_quality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">slippage_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'implementation_shortfall_bps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_post_trade.html#plot_execution_quality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_execution_quality" title="Link to this definition">¶</a></dt>
+<dd><p>Plot the distribution of execution-quality slippage in bps.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_ic_ts">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_ts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rolling_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_ts" title="Link to this definition">¶</a></dt>
+<dd><p>Plot an information-coefficient time series.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_ic_hist">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_hist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_hist" title="Link to this definition">¶</a></dt>
+<dd><p>Plot an information-coefficient histogram.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_ic_qq">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_qq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_qq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_qq" title="Link to this definition">¶</a></dt>
+<dd><p>Plot information coefficients against normal quantiles.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_ic_by_group">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_by_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'group'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_by_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_by_group" title="Link to this definition">¶</a></dt>
+<dd><p>Plot mean information coefficient by group.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_ic_heatmap">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'month'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_heatmap" title="Link to this definition">¶</a></dt>
+<dd><p>Calendar heatmap of mean information coefficient.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_rolling_ic">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_rolling_ic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_rolling_ic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_rolling_ic" title="Link to this definition">¶</a></dt>
+<dd><p>Plot rolling mean information coefficient.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_quantile_returns_bar">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_quantile_returns_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quantile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'return'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_quantile_returns_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_quantile_returns_bar" title="Link to this definition">¶</a></dt>
+<dd><p>Plot mean return by signal quantile.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_top_bottom_quantile_turnover">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_top_bottom_quantile_turnover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quantile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turnover_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'turnover'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_top_bottom_quantile_turnover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_top_bottom_quantile_turnover" title="Link to this definition">¶</a></dt>
+<dd><p>Plot turnover for bottom and top quantiles.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_cumulative_factor_returns">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_cumulative_factor_returns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor_returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_cumulative_factor_returns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_cumulative_factor_returns" title="Link to this definition">¶</a></dt>
+<dd><p>Plot compounded factor returns.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="finance_plots.perf_stats">
 <span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">perf_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">252</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/finance_plots/tables/_perf.html#perf_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.perf_stats" title="Link to this definition">¶</a></dt>
 <dd><p>Compute summary performance statistics.</p>
@@ -891,6 +1299,48 @@ row per metric.</p>
 <dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">great_tables.GT</span></code> table sorted by drawdown depth.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_cost_breakdown">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_cost_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'component'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'total'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_post_trade.html#table_cost_breakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_cost_breakdown" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables cost-breakdown table.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_round_trip_stats">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_round_trip_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trades</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">pnl_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pnl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_post_trade.html#table_round_trip_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_round_trip_stats" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables round-trip statistics table.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_execution_quality">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_execution_quality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">slippage_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'implementation_shortfall_bps'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_post_trade.html#table_execution_quality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_execution_quality" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables execution-quality summary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_information">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_alpha.html#table_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_information" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables information-coefficient summary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_returns_by_quantile">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_returns_by_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quantile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'return'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_alpha.html#table_returns_by_quantile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_returns_by_quantile" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables mean-return-by-quantile table.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_turnover">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_turnover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quantile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turnover_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'turnover'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_alpha.html#table_turnover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_turnover" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables quantile-turnover table.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.table_quantile_statistics">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_quantile_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quantile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'signal_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'count'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_alpha.html#table_quantile_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_quantile_statistics" title="Link to this definition">¶</a></dt>
+<dd><p>Build a Great Tables quantile signal-statistics table.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -982,11 +1432,42 @@ row per metric.</p>
 <li><a class="reference internal" href="#plot-indicator-panel-price-panels-none-figsize-none-title-none"><code class="docutils literal notranslate"><span class="pre">plot_indicator_panel(price,</span> <span class="pre">panels=None,</span> <span class="pre">figsize=None,</span> <span class="pre">title=None)</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#post-trade-plots">Post-Trade Plots</a><ul>
+<li><a class="reference internal" href="#plot-trading-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_trading_cost_breakdown_bar(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-mfe-mae-scatter-trades-mae-col-mae-mfe-col-mfe-side-col-side-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_mfe_mae_scatter(trades,</span> <span class="pre">mae_col=&quot;mae&quot;,</span> <span class="pre">mfe_col=&quot;mfe&quot;,</span> <span class="pre">side_col=&quot;side&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-execution-quality-executions-slippage-col-implementation-shortfall-bps-bins-20-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_execution_quality(executions,</span> <span class="pre">slippage_col=&quot;implementation_shortfall_bps&quot;,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#alpha-analysis-plots">Alpha-Analysis Plots</a><ul>
+<li><a class="reference internal" href="#plot-ic-ts-ic-rolling-window-21-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">rolling_window=21,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-ic-hist-ic-bins-20-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_hist(ic,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-ic-qq-ic-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_qq(ic,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-ic-by-group-data-group-col-group-ic-col-ic-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_by_group(data,</span> <span class="pre">group_col=&quot;group&quot;,</span> <span class="pre">ic_col=&quot;ic&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-ic-heatmap-ic-period-month-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_heatmap(ic,</span> <span class="pre">period=&quot;month&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-rolling-ic-ic-window-21-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_ic(ic,</span> <span class="pre">window=21,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-quantile-returns-bar-data-quantile-col-quantile-return-col-return-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_quantile_returns_bar(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">return_col=&quot;return&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-top-bottom-quantile-turnover-data-quantile-col-quantile-turnover-col-turnover-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_top_bottom_quantile_turnover(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">turnover_col=&quot;turnover&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-cumulative-factor-returns-factor-returns-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_cumulative_factor_returns(factor_returns,</span> <span class="pre">ax=None)</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#performance-tables">Performance Tables</a><ul>
 <li><a class="reference internal" href="#perf-stats-returns-periods-per-year-252"><code class="docutils literal notranslate"><span class="pre">perf_stats(returns,</span> <span class="pre">periods_per_year=252)</span></code></a></li>
 <li><a class="reference internal" href="#table-perf-stats-returns-benchmark-none-periods-per-year-252"><code class="docutils literal notranslate"><span class="pre">table_perf_stats(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">periods_per_year=252)</span></code></a></li>
 <li><a class="reference internal" href="#table-period-returns-returns-period-year"><code class="docutils literal notranslate"><span class="pre">table_period_returns(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code></a></li>
 <li><a class="reference internal" href="#table-drawdowns-returns-top-5"><code class="docutils literal notranslate"><span class="pre">table_drawdowns(returns,</span> <span class="pre">top=5)</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#post-trade-tables">Post-Trade Tables</a><ul>
+<li><a class="reference internal" href="#table-cost-breakdown-costs-component-col-component-value-col-total"><code class="docutils literal notranslate"><span class="pre">table_cost_breakdown(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;)</span></code></a></li>
+<li><a class="reference internal" href="#table-round-trip-stats-trades-pnl-col-pnl"><code class="docutils literal notranslate"><span class="pre">table_round_trip_stats(trades,</span> <span class="pre">pnl_col=&quot;pnl&quot;)</span></code></a></li>
+<li><a class="reference internal" href="#table-execution-quality-executions-slippage-col-implementation-shortfall-bps"><code class="docutils literal notranslate"><span class="pre">table_execution_quality(executions,</span> <span class="pre">slippage_col=&quot;implementation_shortfall_bps&quot;)</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#alpha-analysis-tables">Alpha-Analysis Tables</a><ul>
+<li><a class="reference internal" href="#table-information-ic"><code class="docutils literal notranslate"><span class="pre">table_information(ic)</span></code></a></li>
+<li><a class="reference internal" href="#table-returns-by-quantile-data-quantile-col-quantile-return-col-return"><code class="docutils literal notranslate"><span class="pre">table_returns_by_quantile(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">return_col=&quot;return&quot;)</span></code></a></li>
+<li><a class="reference internal" href="#table-turnover-data-quantile-col-quantile-turnover-col-turnover"><code class="docutils literal notranslate"><span class="pre">table_turnover(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">turnover_col=&quot;turnover&quot;)</span></code></a></li>
+<li><a class="reference internal" href="#table-quantile-statistics-data-quantile-col-quantile-signal-col-signal-mean-count-col-count"><code class="docutils literal notranslate"><span class="pre">table_quantile_statistics(data,</span> <span class="pre">quantile_col=&quot;quantile&quot;,</span> <span class="pre">signal_col=&quot;signal_mean&quot;,</span> <span class="pre">count_col=&quot;count&quot;)</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#example-artifact-helper">Example Artifact Helper</a></li>
@@ -1005,10 +1486,29 @@ row per metric.</p>
 <li><a class="reference internal" href="#finance_plots.plot_returns_timeseries"><code class="docutils literal notranslate"><span class="pre">plot_returns_timeseries()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_price_with_overlays"><code class="docutils literal notranslate"><span class="pre">plot_price_with_overlays()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_indicator_panel"><code class="docutils literal notranslate"><span class="pre">plot_indicator_panel()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_trading_cost_breakdown_bar"><code class="docutils literal notranslate"><span class="pre">plot_trading_cost_breakdown_bar()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_mfe_mae_scatter"><code class="docutils literal notranslate"><span class="pre">plot_mfe_mae_scatter()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_execution_quality"><code class="docutils literal notranslate"><span class="pre">plot_execution_quality()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_ic_ts"><code class="docutils literal notranslate"><span class="pre">plot_ic_ts()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_ic_hist"><code class="docutils literal notranslate"><span class="pre">plot_ic_hist()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_ic_qq"><code class="docutils literal notranslate"><span class="pre">plot_ic_qq()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_ic_by_group"><code class="docutils literal notranslate"><span class="pre">plot_ic_by_group()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_ic_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_ic_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_rolling_ic"><code class="docutils literal notranslate"><span class="pre">plot_rolling_ic()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_quantile_returns_bar"><code class="docutils literal notranslate"><span class="pre">plot_quantile_returns_bar()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_top_bottom_quantile_turnover"><code class="docutils literal notranslate"><span class="pre">plot_top_bottom_quantile_turnover()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_cumulative_factor_returns"><code class="docutils literal notranslate"><span class="pre">plot_cumulative_factor_returns()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.perf_stats"><code class="docutils literal notranslate"><span class="pre">perf_stats()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_perf_stats"><code class="docutils literal notranslate"><span class="pre">table_perf_stats()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_period_returns"><code class="docutils literal notranslate"><span class="pre">table_period_returns()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_drawdowns"><code class="docutils literal notranslate"><span class="pre">table_drawdowns()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_cost_breakdown"><code class="docutils literal notranslate"><span class="pre">table_cost_breakdown()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_round_trip_stats"><code class="docutils literal notranslate"><span class="pre">table_round_trip_stats()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_execution_quality"><code class="docutils literal notranslate"><span class="pre">table_execution_quality()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_information"><code class="docutils literal notranslate"><span class="pre">table_information()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_returns_by_quantile"><code class="docutils literal notranslate"><span class="pre">table_returns_by_quantile()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_turnover"><code class="docutils literal notranslate"><span class="pre">table_turnover()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_quantile_statistics"><code class="docutils literal notranslate"><span class="pre">table_quantile_statistics()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.gallery.generate_gallery"><code class="docutils literal notranslate"><span class="pre">generate_gallery()</span></code></a></li>
 </ul>
 </li>
