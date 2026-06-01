@@ -40,7 +40,7 @@ dependencies = [
 
 [project.optional-dependencies]
 examples = [
-    "finance-calcs>=0.1,<0.2",
+    "finance-calcs>=0.2,<0.3",
     "finance-datagen>=0.2.1,<0.3",
 ]
 develop = [
@@ -48,7 +48,7 @@ develop = [
     "bump-my-version",
     "check-dist",
     "codespell",
-    "finance-calcs>=0.1,<0.2",
+    "finance-calcs>=0.2,<0.3",
     "finance-datagen>=0.2.1,<0.3",
     "hatchling",
     "mdformat",

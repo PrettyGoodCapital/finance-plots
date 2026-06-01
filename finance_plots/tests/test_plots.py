@@ -241,6 +241,73 @@ def test_alpha_analysis_tables(alpha_frame):
     assert "Quantile statistics" in stats_html
 
 
+def test_portfolio_construction_plots() -> None:
+    cov = np.array(
+        [
+            [0.04, 0.01, 0.00],
+            [0.01, 0.09, 0.02],
+            [0.00, 0.02, 0.16],
+        ]
+    )
+    expected_returns = np.array([0.08, 0.10, 0.12])
+    weights = pd.DataFrame(
+        {
+            "date": pd.date_range("2024-01-31", periods=3, freq="ME"),
+            "A": [0.5, 0.4, 0.3],
+            "B": [0.3, 0.4, 0.4],
+            "C": [0.2, 0.2, 0.3],
+        }
+    ).set_index("date")
+    exposures = pd.DataFrame(
+        [[0.2, 0.5], [-0.1, 0.3], [0.4, -0.2]],
+        index=["A", "B", "C"],
+        columns=["value", "momentum"],
+    )
+    impact = pd.DataFrame(
+        {
+            "participation_rate": [0.05, 0.10, 0.20, 0.35],
+            "impact_bps": [2.0, 3.6, 6.5, 11.2],
+        }
+    )
+    execution = pd.DataFrame(
+        {
+            "timestamp": pd.date_range("2024-01-02 09:30", periods=4, freq="15min"),
+            "executed_qty": [1000, 2000, 1800, 1200],
+            "target_qty": [1200, 2800, 4600, 6000],
+        }
+    )
+    costs = pd.DataFrame(
+        {
+            "component": ["commission", "slippage", "market_impact", "rebate"],
+            "total": [12.0, 20.0, 16.0, -3.0],
+        }
+    )
+    attribution = pd.DataFrame(
+        {
+            "date": pd.date_range("2024-01-31", periods=3, freq="ME"),
+            "allocation": [0.001, -0.0005, 0.0008],
+            "selection": [0.002, 0.001, -0.0002],
+            "interaction": [0.0003, -0.0001, 0.0004],
+        }
+    )
+
+    figures = [
+        fp.plot_efficient_frontier(expected_returns, cov),
+        fp.plot_market_impact_curve(impact),
+        fp.plot_execution_timeline(execution),
+        fp.plot_cost_breakdown_bar(costs),
+        fp.plot_return_attribution_stacked(attribution, time_col="date"),
+        fp.plot_portfolio_weight_evolution(weights),
+        fp.plot_weight_diff({"A": 0.5, "B": 0.3, "C": 0.2}, {"A": 0.4, "B": 0.4, "C": 0.2}),
+        fp.plot_risk_decomposition_stacked(pd.DataFrame({"systematic": [0.12, 0.08], "idiosyncratic": [0.04, 0.06]}, index=["A", "B"])),
+        fp.plot_factor_exposure_heatmap(exposures),
+        fp.plot_correlation_matrix(cov, labels=["A", "B", "C"]),
+        fp.plot_covariance_eigenvalues(cov),
+    ]
+
+    assert all(isinstance(fig, Figure) for fig in figures)
+
+
 def test_accepts_polars(returns_series):
     import polars as pl
 
