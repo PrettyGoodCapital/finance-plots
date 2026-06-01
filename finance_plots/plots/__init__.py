@@ -12,6 +12,19 @@ from ._alpha import (
     plot_top_bottom_quantile_turnover,
 )
 from ._indicators import plot_indicator_panel, plot_price_with_overlays
+from ._portfolio import (
+    plot_correlation_matrix,
+    plot_cost_breakdown_bar,
+    plot_covariance_eigenvalues,
+    plot_efficient_frontier,
+    plot_execution_timeline,
+    plot_factor_exposure_heatmap,
+    plot_market_impact_curve,
+    plot_portfolio_weight_evolution,
+    plot_return_attribution_stacked,
+    plot_risk_decomposition_stacked,
+    plot_weight_diff,
+)
 from ._post_trade import plot_execution_quality, plot_mfe_mae_scatter, plot_trading_cost_breakdown_bar
 from ._returns import (
     plot_drawdown_underwater,
@@ -55,4 +68,15 @@ __all__ = [
     "plot_quantile_returns_bar",
     "plot_top_bottom_quantile_turnover",
     "plot_cumulative_factor_returns",
+    "plot_efficient_frontier",
+    "plot_market_impact_curve",
+    "plot_execution_timeline",
+    "plot_cost_breakdown_bar",
+    "plot_return_attribution_stacked",
+    "plot_portfolio_weight_evolution",
+    "plot_weight_diff",
+    "plot_risk_decomposition_stacked",
+    "plot_factor_exposure_heatmap",
+    "plot_correlation_matrix",
+    "plot_covariance_eigenvalues",
 ]
