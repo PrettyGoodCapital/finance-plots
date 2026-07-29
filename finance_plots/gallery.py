@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -105,7 +105,7 @@ GALLERY_ARTIFACTS = {
 
 
 def _epoch_ms(year: int, month: int, day: int) -> int:
-    return int(datetime(year, month, day, tzinfo=timezone.utc).timestamp() * 1000)
+    return int(datetime(year, month, day, tzinfo=UTC).timestamp() * 1000)
 
 
 def _example_import_error(error: ImportError) -> ImportError:

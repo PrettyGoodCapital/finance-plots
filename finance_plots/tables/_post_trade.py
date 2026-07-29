@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-__all__ = ["table_cost_breakdown", "table_round_trip_stats", "table_execution_quality"]
+__all__ = ["table_cost_breakdown", "table_execution_quality", "table_round_trip_stats"]
 
 
 def _frame(data: Any) -> pd.DataFrame:

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,17 +11,17 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 __all__ = [
-    "plot_efficient_frontier",
-    "plot_market_impact_curve",
-    "plot_execution_timeline",
-    "plot_cost_breakdown_bar",
-    "plot_return_attribution_stacked",
-    "plot_portfolio_weight_evolution",
-    "plot_weight_diff",
-    "plot_risk_decomposition_stacked",
-    "plot_factor_exposure_heatmap",
     "plot_correlation_matrix",
+    "plot_cost_breakdown_bar",
     "plot_covariance_eigenvalues",
+    "plot_efficient_frontier",
+    "plot_execution_timeline",
+    "plot_factor_exposure_heatmap",
+    "plot_market_impact_curve",
+    "plot_portfolio_weight_evolution",
+    "plot_return_attribution_stacked",
+    "plot_risk_decomposition_stacked",
+    "plot_weight_diff",
 ]
 
 

@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-__all__ = ["table_information", "table_returns_by_quantile", "table_turnover", "table_quantile_statistics"]
+__all__ = ["table_information", "table_quantile_statistics", "table_returns_by_quantile", "table_turnover"]
 
 
 def _frame(data: Any) -> pd.DataFrame:

@@ -9,7 +9,7 @@ import numpy as np
 from .._util import cumulative_returns, drawdown, to_returns_and_index
 from ..plots._returns import _period_key, _period_returns
 
-__all__ = ["perf_stats", "table_perf_stats", "table_period_returns", "table_drawdowns"]
+__all__ = ["perf_stats", "table_drawdowns", "table_perf_stats", "table_period_returns"]
 
 _PERF_STAT_LABELS = {
     "cum_return": "Cumulative return",

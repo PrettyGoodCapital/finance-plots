@@ -43,7 +43,7 @@ def to_returns_and_index(returns: Any) -> tuple[np.ndarray, np.ndarray]:
     if idx is not None:
         try:
             index = np.asarray(idx)
-        except Exception:
+        except (TypeError, ValueError):
             index = np.arange(values.size)
     else:
         index = np.arange(values.size)

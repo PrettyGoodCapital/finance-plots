@@ -14,15 +14,15 @@ from matplotlib.figure import Figure
 from .._util import cumulative_returns, to_returns_and_index
 
 __all__ = [
-    "plot_ic_ts",
-    "plot_ic_hist",
-    "plot_ic_qq",
+    "plot_cumulative_factor_returns",
     "plot_ic_by_group",
     "plot_ic_heatmap",
-    "plot_rolling_ic",
+    "plot_ic_hist",
+    "plot_ic_qq",
+    "plot_ic_ts",
     "plot_quantile_returns_bar",
+    "plot_rolling_ic",
     "plot_top_bottom_quantile_turnover",
-    "plot_cumulative_factor_returns",
 ]
 
 

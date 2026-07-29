@@ -10,7 +10,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-__all__ = ["plot_trading_cost_breakdown_bar", "plot_mfe_mae_scatter", "plot_execution_quality"]
+__all__ = ["plot_execution_quality", "plot_mfe_mae_scatter", "plot_trading_cost_breakdown_bar"]
 
 
 def _new_axes(ax: Axes | None, *, figsize: tuple[float, float] = (8.0, 4.0)) -> tuple[Figure, Axes]:
