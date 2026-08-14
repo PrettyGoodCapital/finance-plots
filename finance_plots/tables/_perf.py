@@ -4,17 +4,19 @@ from __future__ import annotations
 
 from typing import Any
 
-import numpy as np
+import finance_calcs as fc
+import polars as pl
+from finance_enums import Frequency
 
-from .._util import cumulative_returns, drawdown, to_returns_and_index
+from .._util import to_returns_and_index
 from ..plots._returns import _period_key, _period_returns
 
-__all__ = ["perf_stats", "table_drawdowns", "table_perf_stats", "table_period_returns"]
+__all__ = ["performance_statistics", "table_drawdowns", "table_performance_statistics", "table_period_returns"]
 
 _PERF_STAT_LABELS = {
-    "cum_return": "Cumulative return",
-    "ann_return": "Annualised return",
-    "ann_vol": "Annualised volatility",
+    "cumulative_return": "Cumulative return",
+    "annualized_return": "Annualized return",
+    "annualized_volatility": "Annualized volatility",
     "sharpe": "Sharpe ratio",
     "sortino": "Sortino ratio",
     "max_drawdown": "Max drawdown",
@@ -22,76 +24,49 @@ _PERF_STAT_LABELS = {
 }
 
 _PERF_STAT_PERCENT_KEYS = {
-    "cum_return",
-    "ann_return",
-    "ann_vol",
+    "cumulative_return",
+    "annualized_return",
+    "annualized_volatility",
     "max_drawdown",
 }
 
 
-def _annualised_return(values: np.ndarray, ppy: int) -> float:
-    if values.size == 0:
-        return float("nan")
-    total = (1.0 + np.where(np.isfinite(values), values, 0.0)).prod()
-    return float(total ** (ppy / values.size) - 1.0)
-
-
-def _annualised_vol(values: np.ndarray, ppy: int) -> float:
-    if values.size < 2:
-        return float("nan")
-    return float(np.nanstd(values, ddof=1) * np.sqrt(ppy))
-
-
-def _sharpe(values: np.ndarray, ppy: int) -> float:
-    vol = _annualised_vol(values, ppy)
-    if not np.isfinite(vol) or vol == 0.0:
-        return float("nan")
-    return float(np.nanmean(values) * ppy / vol)
-
-
-def _sortino(values: np.ndarray, ppy: int) -> float:
-    downside = np.where(values < 0, values, 0.0)
-    dd = np.sqrt(np.nanmean(downside**2)) * np.sqrt(ppy)
-    if not np.isfinite(dd) or dd == 0.0:
-        return float("nan")
-    return float(np.nanmean(values) * ppy / dd)
-
-
-def perf_stats(
+def performance_statistics(
     returns: Any,
     *,
-    periods_per_year: int = 252,
+    frequency: Frequency | str | float = Frequency.Day,
 ) -> dict[str, float]:
     """Compute summary performance statistics.
 
     Args:
         returns: 1-D series of periodic returns (narwhals-compatible).
-        periods_per_year: Annualization factor.
+        frequency: Observation frequency alias, enum, or observations per year.
 
     Returns:
-        Dict keyed by ``cum_return``, ``ann_return``, ``ann_vol``,
+        Dict keyed by ``cumulative_return``, ``annualized_return``, ``annualized_volatility``,
         ``sharpe``, ``sortino``, ``max_drawdown``, ``calmar``.
     """
     values, _ = to_returns_and_index(returns)
-    ann = _annualised_return(values, periods_per_year)
-    mdd = float(drawdown(values).min()) if values.size else float("nan")
-    calmar = ann / abs(mdd) if (np.isfinite(mdd) and mdd != 0.0) else float("nan")
-    return {
-        "cum_return": float(cumulative_returns(values)[-1]) if values.size else float("nan"),
-        "ann_return": ann,
-        "ann_vol": _annualised_vol(values, periods_per_year),
-        "sharpe": _sharpe(values, periods_per_year),
-        "sortino": _sortino(values, periods_per_year),
-        "max_drawdown": mdd,
-        "calmar": calmar,
-    }
+    if values.size == 0:
+        return dict.fromkeys(_PERF_STAT_LABELS, float("nan"))
+    frame = pl.DataFrame({"returns": values})
+    row = frame.select(
+        fc.cumulative_return(pl.col("returns")).alias("cumulative_return"),
+        fc.annualized_return(pl.col("returns"), frequency=frequency).alias("annualized_return"),
+        fc.annualized_volatility(pl.col("returns"), frequency=frequency).alias("annualized_volatility"),
+        fc.sharpe(pl.col("returns"), frequency=frequency).alias("sharpe"),
+        fc.sortino(pl.col("returns"), frequency=frequency).alias("sortino"),
+        fc.max_drawdown(pl.col("returns")).alias("max_drawdown"),
+        fc.calmar(pl.col("returns"), frequency=frequency).alias("calmar"),
+    ).row(0, named=True)
+    return {key: float(value) for key, value in row.items()}
 
 
-def table_perf_stats(
+def table_performance_statistics(
     returns: Any,
     benchmark: Any | None = None,
     *,
-    periods_per_year: int = 252,
+    frequency: Frequency | str | float = Frequency.Day,
 ):
     """Build a ``great_tables.GT`` performance-stats table.
 
@@ -99,19 +74,18 @@ def table_perf_stats(
         returns: 1-D series of periodic returns.
         benchmark: Optional benchmark return series. When provided, a
             second value column is added to the table.
-        periods_per_year: Annualization factor.
+        frequency: Observation frequency alias, enum, or observations per year.
 
     Returns:
         A ``great_tables.GT`` table with one column per series and one
         row per metric.
     """
-    import polars as pl
     from great_tables import GT, md
 
-    strat = perf_stats(returns, periods_per_year=periods_per_year)
+    strat = performance_statistics(returns, frequency=frequency)
     rows = {"metric": list(strat.keys()), "strategy": list(strat.values())}
     if benchmark is not None:
-        bench = perf_stats(benchmark, periods_per_year=periods_per_year)
+        bench = performance_statistics(benchmark, frequency=frequency)
         rows["benchmark"] = [bench[k] for k in strat]
 
     df = pl.DataFrame(rows)
@@ -124,8 +98,8 @@ def table_perf_stats(
         if m
         in {
             "Cumulative return",
-            "Annualised return",
-            "Annualised volatility",
+            "Annualized return",
+            "Annualized volatility",
             "Max drawdown",
         }
     ]
@@ -185,37 +159,18 @@ def table_period_returns(
 
 def _drawdown_rows(returns: Any, top: int = 5) -> list[dict[str, Any]]:
     values, index = to_returns_and_index(returns)
-    if values.size == 0:
-        return []
-
-    dd = drawdown(values)
-    rows: list[dict[str, Any]] = []
-    in_drawdown = False
-    start = 0
-    trough = 0
-
-    for i, value in enumerate(dd):
-        if value < 0.0 and not in_drawdown:
-            in_drawdown = True
-            start = max(i - 1, 0)
-            trough = i
-        if in_drawdown and value < dd[trough]:
-            trough = i
-        if in_drawdown and (value == 0.0 or i == len(dd) - 1):
-            recovery = i if value == 0.0 else None
-            rows.append(
-                {
-                    "start": index[start],
-                    "trough": index[trough],
-                    "recovery": index[recovery] if recovery is not None else "Unrecovered",
-                    "drawdown": float(dd[trough]),
-                    "duration": int(i - start),
-                }
-            )
-            in_drawdown = False
-
-    rows.sort(key=lambda row: row["drawdown"])
-    return [{"rank": i + 1, **row} for i, row in enumerate(rows[:top])]
+    details = fc.drawdown_details(pl.Series("returns", values), date=pl.Series("date", index)).sort("max_drawdown").head(top)
+    return [
+        {
+            "rank": rank,
+            "start": row["start"],
+            "trough": row["valley"],
+            "recovery": row["end"] if row["recovered"] else "Unrecovered",
+            "drawdown": row["max_drawdown"],
+            "duration": row["duration"],
+        }
+        for rank, row in enumerate(details.to_dicts(), start=1)
+    ]
 
 
 def _display_index_value(value: Any) -> str:

@@ -12,7 +12,7 @@ authors = [
 description = "Standard financial plots"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-version = "0.1.0"
+version = "0.2.0"
 requires-python = ">=3.11"
 keywords = []
 
@@ -29,6 +29,8 @@ classifiers = [
 ]
 
 dependencies = [
+    "finance-calcs>=0.3.0,<0.4",
+    "finance-enums>=0.5.1,<0.8",
     "great-tables>=0.10",
     "matplotlib>=3.7",
     "narwhals>=1.0",
@@ -39,16 +41,14 @@ dependencies = [
 
 [project.optional-dependencies]
 examples = [
-    "finance-calcs>=0.2,<0.3",
-    "finance-datagen>=0.2.1,<0.4",
+    "finance-datagen>=0.3.2,<0.4",
 ]
 develop = [
     "build",
     "bump-my-version",
     "check-dist",
     "codespell",
-    "finance-calcs>=0.2,<0.3",
-    "finance-datagen>=0.2.1,<0.4",
+    "finance-datagen>=0.3.2,<0.4",
     "hatchling",
     "mdformat",
     "mdformat-tables>=1",
@@ -70,7 +70,7 @@ Repository = "https://github.com/prettygoodcapital/finance-plots"
 Homepage = "https://github.com/prettygoodcapital/finance-plots"
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.2.0"
 commit = true
 tag = true
 commit_args = "-s"
@@ -161,4 +161,3 @@ pages = [
     "docs/src/API.md",
 ]
 use-autoapi = false
-

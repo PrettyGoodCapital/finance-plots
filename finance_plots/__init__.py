@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .plots import (
     plot_correlation_matrix,
@@ -44,12 +44,12 @@ from .plots import (
     plot_weight_diff,
 )
 from .tables import (
-    perf_stats,
+    performance_statistics,
     table_cost_breakdown,
     table_drawdowns,
     table_execution_quality,
     table_information,
-    table_perf_stats,
+    table_performance_statistics,
     table_period_returns,
     table_quantile_statistics,
     table_returns_by_quantile,
@@ -58,7 +58,7 @@ from .tables import (
 )
 
 __all__ = [
-    "perf_stats",
+    "performance_statistics",
     "plot_correlation_matrix",
     "plot_cost_breakdown_bar",
     "plot_covariance_eigenvalues",
@@ -100,7 +100,7 @@ __all__ = [
     "table_drawdowns",
     "table_execution_quality",
     "table_information",
-    "table_perf_stats",
+    "table_performance_statistics",
     "table_period_returns",
     "table_quantile_statistics",
     "table_returns_by_quantile",

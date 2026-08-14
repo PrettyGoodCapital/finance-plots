@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import finance_calcs as fc
 import numpy as np
+import polars as pl
 
 
 def to_returns_and_index(returns: Any) -> tuple[np.ndarray, np.ndarray]:
@@ -40,7 +42,7 @@ def to_returns_and_index(returns: Any) -> tuple[np.ndarray, np.ndarray]:
         raise ValueError(f"returns must be 1-D, got shape={values.ndim}")
 
     idx = getattr(returns, "index", None)
-    if idx is not None:
+    if idx is not None and not callable(idx):
         try:
             index = np.asarray(idx)
         except (TypeError, ValueError):
@@ -62,8 +64,7 @@ def cumulative_returns(values: np.ndarray) -> np.ndarray:
     Returns:
         Array of ``(1 + r).cumprod() - 1``.
     """
-    safe = np.where(np.isfinite(values), values, 0.0)
-    return np.cumprod(1.0 + safe) - 1.0
+    return pl.DataFrame({"returns": values}).select(fc.cumulative_returns(pl.col("returns"))).to_series().to_numpy()
 
 
 def drawdown(values: np.ndarray) -> np.ndarray:
@@ -76,7 +77,4 @@ def drawdown(values: np.ndarray) -> np.ndarray:
         Array equal to ``equity / running_peak - 1``; always
         non-positive.
     """
-    safe = np.where(np.isfinite(values), values, 0.0)
-    equity = np.cumprod(1.0 + safe)
-    peak = np.maximum.accumulate(equity)
-    return equity / peak - 1.0
+    return pl.DataFrame({"returns": values}).select(fc.drawdown_series(pl.col("returns"))).to_series().to_numpy()

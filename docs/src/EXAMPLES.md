@@ -43,9 +43,9 @@ benchmark_prices = generate_prices(
 
 price_frame = prices.with_columns(
     fc.simple_returns(pl.col("price")).alias("ret"),
-    fc.sma(pl.col("price"), period=20).alias("sma20"),
-    fc.ema(pl.col("price"), period=60).alias("ema60"),
-    fc.rsi(pl.col("price"), period=14).alias("rsi14"),
+    fc.sma(pl.col("price"), window=20).alias("sma20"),
+    fc.ema(pl.col("price"), window=60).alias("ema60"),
+    fc.rsi(pl.col("price"), window=14).alias("rsi14"),
     fc.macd_line(pl.col("price")).alias("macd"),
     fc.macd_signal(pl.col("price")).alias("macd_signal"),
 )
@@ -97,8 +97,8 @@ signals = generate_signal(n_dates=80, n_assets=40, ic=0.12, seed=23, start=date(
     .alias("group")
 )
 signals = signals.with_columns(fc.assign_quantile(pl.col("signal"), 5).over("date").alias("quantile"))
-ic_frame = signals.group_by("date").agg(fc.spearman_ic(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
-ic_by_group = signals.group_by("date", "group").agg(fc.spearman_ic(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
+ic_frame = signals.group_by("date").agg(fc.information_coefficient_spearman(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
+ic_by_group = signals.group_by("date", "group").agg(fc.information_coefficient_spearman(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
 changed = signals.sort("symbol", "date").with_columns(fc.quantile_changed(pl.col("quantile")).over("symbol").alias("changed"))
 turnover = changed.group_by("date", "quantile").agg(fc.quantile_turnover(pl.col("changed")).alias("turnover"))
 quantile_returns = signals.group_by("date", "quantile").agg(
@@ -231,23 +231,23 @@ fig = fp.plot_indicator_panel(
 ## Performance Statistics
 
 ```python
-stats = fp.perf_stats(returns)
+stats = fp.performance_statistics(returns)
 ```
 
-```{include} ../assets/gallery/perf_stats.md
+```{include} ../assets/gallery/performance_statistics.md
 ```
 
 ## Performance Table
 
 ```python
-table = fp.table_perf_stats(returns, benchmark=benchmark)
+table = fp.table_performance_statistics(returns, benchmark=benchmark)
 html = table.as_raw_html()
 ```
 
-```{include} ../assets/gallery/table_perf_stats.md
+```{include} ../assets/gallery/table_performance_statistics.md
 ```
 
-[table_perf_stats.html](../assets/gallery/table_perf_stats.html)
+[table_performance_statistics.html](../assets/gallery/table_performance_statistics.html)
 
 ## Period Return Table
 

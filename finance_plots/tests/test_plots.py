@@ -119,12 +119,12 @@ def test_plot_period_return_charts(returns_series):
     assert all(isinstance(fig, Figure) for fig in figures)
 
 
-def test_perf_stats_keys(returns_series):
-    stats = fp.perf_stats(returns_series)
+def test_performance_statistics_keys(returns_series):
+    stats = fp.performance_statistics(returns_series)
     expected = {
-        "cum_return",
-        "ann_return",
-        "ann_vol",
+        "cumulative_return",
+        "annualized_return",
+        "annualized_volatility",
         "sharpe",
         "sortino",
         "max_drawdown",
@@ -134,13 +134,54 @@ def test_perf_stats_keys(returns_series):
     assert all(isinstance(v, float) for v in stats.values())
 
 
-def test_perf_stats_max_drawdown_nonpositive(returns_series):
-    stats = fp.perf_stats(returns_series)
+def test_performance_statistics_max_drawdown_nonpositive(returns_series):
+    stats = fp.performance_statistics(returns_series)
     assert stats["max_drawdown"] <= 0.0
 
 
-def test_table_perf_stats(returns_series, benchmark_series):
-    gt = fp.table_perf_stats(returns_series, benchmark=benchmark_series)
+def test_performance_statistics_handles_missing_returns_and_initial_loss():
+    returns = pd.Series([-0.10, np.nan, 0.05, -0.02, 0.03], name="r")
+    finite = returns.dropna().to_numpy()
+    cumulative = float(np.prod(1.0 + finite) - 1.0)
+    annualised = float((1.0 + cumulative) ** (252 / finite.size) - 1.0)
+    volatility = float(np.std(finite, ddof=1) * np.sqrt(252))
+    downside = np.where(finite < 0.0, finite, 0.0)
+    downside_deviation = float(np.sqrt(np.mean(downside**2)) * np.sqrt(252))
+    expected = {
+        "cumulative_return": cumulative,
+        "annualized_return": annualised,
+        "annualized_volatility": volatility,
+        "sharpe": float(np.mean(finite) * 252 / volatility),
+        "sortino": float(np.mean(finite) * 252 / downside_deviation),
+        "max_drawdown": -0.10,
+        "calmar": annualised / 0.10,
+    }
+
+    assert fp.performance_statistics(returns) == pytest.approx(expected)
+
+
+def test_performance_statistics_accepts_frequency_alias_and_raw_number(returns_series):
+    alias = fp.performance_statistics(returns_series, frequency="daily")
+    raw = fp.performance_statistics(returns_series, frequency=252)
+    assert raw == pytest.approx(alias)
+
+
+def test_performance_statistics_accepts_python_list():
+    stats = fp.performance_statistics([0.01, -0.005, 0.02], frequency="daily")
+
+    assert set(stats) == {
+        "cumulative_return",
+        "annualized_return",
+        "annualized_volatility",
+        "sharpe",
+        "sortino",
+        "max_drawdown",
+        "calmar",
+    }
+
+
+def test_table_performance_statistics(returns_series, benchmark_series):
+    gt = fp.table_performance_statistics(returns_series, benchmark=benchmark_series)
     # Smoke: render to HTML successfully.
     html = gt.as_raw_html()
     assert "Performance summary" in html
@@ -314,8 +355,8 @@ def test_accepts_polars(returns_series):
     s = pl.Series("r", returns_series.values)
     fig = fp.plot_drawdown_underwater(s)
     assert isinstance(fig, Figure)
-    stats = fp.perf_stats(s)
-    assert np.isfinite(stats["ann_vol"])
+    stats = fp.performance_statistics(s)
+    assert np.isfinite(stats["annualized_volatility"])
 
 
 def test_accepts_numpy(returns_series):
@@ -418,9 +459,9 @@ def test_generate_gallery_writes_every_public_artifact(tmp_path):
         "plot_quantile_returns_bar": "plot_quantile_returns_bar.png",
         "plot_top_bottom_quantile_turnover": "plot_top_bottom_quantile_turnover.png",
         "plot_cumulative_factor_returns": "plot_cumulative_factor_returns.png",
-        "perf_stats": "perf_stats.md",
-        "table_perf_stats": "table_perf_stats.html",
-        "table_perf_stats_markdown": "table_perf_stats.md",
+        "performance_statistics": "performance_statistics.md",
+        "table_performance_statistics": "table_performance_statistics.html",
+        "table_performance_statistics_markdown": "table_performance_statistics.md",
         "table_period_returns": "table_period_returns.html",
         "table_period_returns_markdown": "table_period_returns.md",
         "table_drawdowns": "table_drawdowns.html",
@@ -456,13 +497,13 @@ def test_gallery_markdown_artifacts_render_inline_tables(tmp_path):
 
     outputs = generate_gallery(tmp_path)
 
-    perf_stats = outputs["perf_stats"].read_text(encoding="utf-8")
-    table_perf = outputs["table_perf_stats_markdown"].read_text(encoding="utf-8")
+    performance_statistics = outputs["performance_statistics"].read_text(encoding="utf-8")
+    table_perf = outputs["table_performance_statistics_markdown"].read_text(encoding="utf-8")
     drawdowns = outputs["table_drawdowns_markdown"].read_text(encoding="utf-8")
     cost_breakdown = outputs["table_cost_breakdown_markdown"].read_text(encoding="utf-8")
     information = outputs["table_information_markdown"].read_text(encoding="utf-8")
 
-    assert "| Metric | Value |" in perf_stats
+    assert "| Metric | Value |" in performance_statistics
     assert "Sharpe ratio" in table_perf
     assert "Drawdown" in drawdowns
     assert "Component" in cost_breakdown

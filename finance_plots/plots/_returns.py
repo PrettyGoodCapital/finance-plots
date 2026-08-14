@@ -4,21 +4,15 @@ from __future__ import annotations
 
 from typing import Any
 
+import finance_calcs as fc
 import matplotlib.pyplot as plt
 import numpy as np
+import polars as pl
+from finance_enums import Frequency, to_frequency
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from .._util import cumulative_returns, drawdown, to_returns_and_index
-
-try:
-    from finance_enums import Frequency, to_frequency
-except ImportError:  # pragma: no cover - optional dependency for now
-    Frequency = None  # type: ignore[assignment]
-
-    def to_frequency(value):  # type: ignore[no-redef]
-        return str(value).lower()
-
 
 __all__ = [
     "plot_drawdown_underwater",
@@ -52,8 +46,14 @@ def _indexed_returns(returns: Any):
 
 
 def _period_key(period: Any) -> str:
-    freq = to_frequency(period) if Frequency is not None else str(period).lower()
-    return freq.value if Frequency is not None else freq
+    return to_frequency(period).value
+
+
+def _expression_series(values: np.ndarray, index: Any, expression: pl.Expr):
+    import pandas as pd
+
+    result = pl.DataFrame({"returns": values}).select(expression).to_series().to_numpy()
+    return pd.Series(result, index=index)
 
 
 def _datetime_index(index: np.ndarray, size: int):
@@ -71,25 +71,12 @@ def _datetime_index(index: np.ndarray, size: int):
 
 
 _PERIOD_RETURN_SPEC = {
-    "day": {"resample": None, "label": "daily"},
-    "week": {"resample": "W", "label": "weekly"},
-    "month": {"resample": "month_end", "label": "monthly"},
-    "quarter": {"resample": "quarter_end", "label": "quarterly"},
-    "year": {"resample": "year_end", "label": "annual"},
+    "day": {"label": "daily"},
+    "week": {"label": "weekly"},
+    "month": {"label": "monthly"},
+    "quarter": {"label": "quarterly"},
+    "year": {"label": "annual"},
 }
-
-
-def _resample_rule(key: str):
-    import pandas as pd
-
-    resample = _PERIOD_RETURN_SPEC[key]["resample"]
-    if resample == "month_end":
-        return pd.offsets.MonthEnd()
-    if resample == "quarter_end":
-        return pd.offsets.QuarterEnd()
-    if resample == "year_end":
-        return pd.offsets.YearEnd()
-    return resample
 
 
 def _period_returns(returns: Any, period: Any):
@@ -101,12 +88,17 @@ def _period_returns(returns: Any, period: Any):
 
     values, index = to_returns_and_index(returns)
     dt_index = _datetime_index(index, values.size)
-    safe = np.where(np.isfinite(values), values, 0.0)
-    series = pd.Series(safe, index=dt_index)
-    resample = _resample_rule(key)
-    if resample is None:
-        return series
-    return (1.0 + series).resample(resample).prod() - 1.0
+    date_values = np.asarray(dt_index.tz_localize(None) if dt_index.tz is not None else dt_index, dtype="datetime64[ns]")
+    frame = pl.DataFrame({"date": date_values, "returns": values})
+    result = (
+        frame.with_columns(
+            fc.period_bucket(pl.col("date"), period).alias("bucket"),
+            fc.cumulative_return(pl.col("returns"), period=period, date=pl.col("date")).alias("period_return"),
+        )
+        .select("bucket", "period_return")
+        .unique(subset="bucket", keep="last", maintain_order=True)
+    )
+    return pd.Series(result["period_return"].to_numpy(), index=pd.DatetimeIndex(result["bucket"].to_numpy()))
 
 
 def _plot_metric(series, title: str, ylabel: str, ax: Axes | None = None) -> Figure:
@@ -230,7 +222,7 @@ def plot_rolling_volatility(
     returns: Any,
     window: int = 63,
     *,
-    periods_per_year: int = 252,
+    frequency: Frequency | str | float = Frequency.Day,
     ax: Axes | None = None,
 ) -> Figure:
     """Plot rolling annualized volatility.
@@ -238,14 +230,14 @@ def plot_rolling_volatility(
     Args:
         returns: 1-D series of periodic returns.
         window: Rolling window length in observations.
-        periods_per_year: Annualization factor.
+        frequency: Observation frequency alias, enum, or observations per year.
         ax: Existing matplotlib ``Axes`` to draw onto.
 
     Returns:
         The ``matplotlib.figure.Figure`` containing the plot.
     """
-    series = _indexed_returns(returns)
-    vol = series.rolling(window).std(ddof=1) * np.sqrt(periods_per_year)
+    values, index = to_returns_and_index(returns)
+    vol = _expression_series(values, index, fc.annualized_volatility(pl.col("returns"), frequency=frequency, window=window))
     return _plot_metric(vol, f"Rolling {window}-period volatility", "annualized volatility", ax)
 
 
@@ -253,7 +245,7 @@ def plot_rolling_sharpe(
     returns: Any,
     window: int = 63,
     *,
-    periods_per_year: int = 252,
+    frequency: Frequency | str | float = Frequency.Day,
     ax: Axes | None = None,
 ) -> Figure:
     """Plot rolling annualized Sharpe ratio.
@@ -261,16 +253,14 @@ def plot_rolling_sharpe(
     Args:
         returns: 1-D series of periodic returns.
         window: Rolling window length in observations.
-        periods_per_year: Annualization factor.
+        frequency: Observation frequency alias, enum, or observations per year.
         ax: Existing matplotlib ``Axes`` to draw onto.
 
     Returns:
         The ``matplotlib.figure.Figure`` containing the plot.
     """
-    series = _indexed_returns(returns)
-    rolling_mean = series.rolling(window).mean() * periods_per_year
-    rolling_vol = series.rolling(window).std(ddof=1) * np.sqrt(periods_per_year)
-    sharpe = rolling_mean / rolling_vol.replace(0.0, np.nan)
+    values, index = to_returns_and_index(returns)
+    sharpe = _expression_series(values, index, fc.sharpe(pl.col("returns"), frequency=frequency, window=window))
     return _plot_metric(sharpe, f"Rolling {window}-period Sharpe", "Sharpe ratio", ax)
 
 
@@ -293,7 +283,11 @@ def plot_rolling_beta(
         The ``matplotlib.figure.Figure`` containing the plot.
     """
     strategy, bench = _paired_returns(returns, benchmark)
-    beta = strategy.rolling(window).cov(bench) / bench.rolling(window).var(ddof=1)
+    frame = pl.DataFrame({"returns": strategy.to_numpy(), "benchmark": bench.to_numpy()})
+    values = frame.select(fc.beta(pl.col("returns"), pl.col("benchmark"), window=window)).to_series().to_numpy()
+    import pandas as pd
+
+    beta = pd.Series(values, index=strategy.index)
     return _plot_metric(beta, f"Rolling {window}-period beta", "beta", ax)
 
 
@@ -445,8 +439,7 @@ def plot_returns_heatmap(
     """
     import pandas as pd
 
-    freq = to_frequency(period) if Frequency is not None else str(period).lower()
-    key = freq.value if Frequency is not None else freq
+    key = to_frequency(period).value
     if key not in _HEATMAP_PERIOD_SPEC:
         raise ValueError(f"plot_returns_heatmap: period={period!r} not supported (expected one of {sorted(_HEATMAP_PERIOD_SPEC)})")
     spec = _HEATMAP_PERIOD_SPEC[key]
@@ -454,8 +447,7 @@ def plot_returns_heatmap(
     values, index = to_returns_and_index(returns)
     dt_index = _datetime_index(index, values.size)
 
-    s = pd.Series(values, index=dt_index)
-    bucketed = (1.0 + s).resample(_resample_rule(key)).prod() - 1.0
+    bucketed = _period_returns(pd.Series(values, index=dt_index), period)
     if spec["col_attr"] == "isocalendar_week":
         col_vals = bucketed.index.isocalendar().week
     else:

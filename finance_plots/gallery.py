@@ -39,12 +39,12 @@ from .plots import (
 )
 from .plots._returns import _period_returns
 from .tables import (
-    perf_stats,
+    performance_statistics,
     table_cost_breakdown,
     table_drawdowns,
     table_execution_quality,
     table_information,
-    table_perf_stats,
+    table_performance_statistics,
     table_period_returns,
     table_quantile_statistics,
     table_returns_by_quantile,
@@ -80,9 +80,9 @@ GALLERY_ARTIFACTS = {
     "plot_quantile_returns_bar": "plot_quantile_returns_bar.png",
     "plot_top_bottom_quantile_turnover": "plot_top_bottom_quantile_turnover.png",
     "plot_cumulative_factor_returns": "plot_cumulative_factor_returns.png",
-    "perf_stats": "perf_stats.md",
-    "table_perf_stats": "table_perf_stats.html",
-    "table_perf_stats_markdown": "table_perf_stats.md",
+    "performance_statistics": "performance_statistics.md",
+    "table_performance_statistics": "table_performance_statistics.html",
+    "table_performance_statistics_markdown": "table_performance_statistics.md",
     "table_period_returns": "table_period_returns.html",
     "table_period_returns_markdown": "table_period_returns.md",
     "table_drawdowns": "table_drawdowns.html",
@@ -146,15 +146,15 @@ def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:
     return "\n".join(["<!-- markdownlint-disable-file MD041 -->", header, separator, *body]) + "\n"
 
 
-def _perf_stats_markdown(returns: Any) -> str:
-    stats = perf_stats(returns)
+def _performance_statistics_markdown(returns: Any) -> str:
+    stats = performance_statistics(returns)
     rows = [[_PERF_STAT_LABELS[key], _format_value(value, percent=key in _PERF_STAT_PERCENT_KEYS)] for key, value in stats.items()]
     return _markdown_table(["Metric", "Value"], rows)
 
 
-def _table_perf_stats_markdown(returns: Any, benchmark: Any) -> str:
-    strategy = perf_stats(returns)
-    bench = perf_stats(benchmark)
+def _table_performance_statistics_markdown(returns: Any, benchmark: Any) -> str:
+    strategy = performance_statistics(returns)
+    bench = performance_statistics(benchmark)
     rows = [
         [
             _PERF_STAT_LABELS[key],
@@ -195,9 +195,9 @@ def _cost_breakdown_markdown(costs: Any) -> str:
 
 def _round_trip_stats_markdown(stats: dict[str, Any]) -> str:
     labels = {
-        "n_trades": "Trades",
+        "trade_count": "Trades",
         "win_rate": "Win rate",
-        "avg_pnl": "Average PnL",
+        "average_pnl": "Average PnL",
         "total_pnl": "Total PnL",
         "profit_factor": "Profit factor",
         "payoff_ratio": "Payoff ratio",
@@ -293,9 +293,9 @@ def _sample_data() -> dict[str, Any]:
 
     enriched = prices.with_columns(
         fc.simple_returns(pl.col("price")).alias("ret"),
-        fc.sma(pl.col("price"), period=20).alias("sma20"),
-        fc.ema(pl.col("price"), period=60).alias("ema60"),
-        fc.rsi(pl.col("price"), period=14).alias("rsi14"),
+        fc.sma(pl.col("price"), window=20).alias("sma20"),
+        fc.ema(pl.col("price"), window=60).alias("ema60"),
+        fc.rsi(pl.col("price"), window=14).alias("rsi14"),
         fc.macd_line(pl.col("price")).alias("macd"),
         fc.macd_signal(pl.col("price")).alias("macd_signal"),
     )
@@ -335,8 +335,10 @@ def _sample_data() -> dict[str, Any]:
         pl.when(pl.col("symbol").str.slice(-1).is_in(["0", "2", "4", "6", "8"])).then(pl.lit("Tech")).otherwise(pl.lit("Energy")).alias("group")
     )
     signals = signals.with_columns(fc.assign_quantile(pl.col("signal"), 5).over("date").alias("quantile"))
-    ic = signals.group_by("date").agg(fc.spearman_ic(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
-    ic_by_group = signals.group_by("date", "group").agg(fc.spearman_ic(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
+    ic = signals.group_by("date").agg(fc.information_coefficient_spearman(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
+    ic_by_group = (
+        signals.group_by("date", "group").agg(fc.information_coefficient_spearman(pl.col("signal"), pl.col("fwd_returns")).alias("ic")).sort("date")
+    )
     changed = signals.sort("symbol", "date").with_columns(fc.quantile_changed(pl.col("quantile")).over("symbol").alias("changed"))
     turnover = changed.group_by("date", "quantile").agg(fc.quantile_turnover(pl.col("changed")).alias("turnover"))
     quantile_returns = signals.group_by("date", "quantile").agg(
@@ -467,23 +469,23 @@ def generate_gallery(
         if close_figures:
             plt.close(figure)
 
-    perf_stats_path = output_path / GALLERY_ARTIFACTS["perf_stats"]
-    perf_stats_path.write_text(_perf_stats_markdown(sample["returns"]), encoding="utf-8")
-    outputs["perf_stats"] = perf_stats_path
+    performance_statistics_path = output_path / GALLERY_ARTIFACTS["performance_statistics"]
+    performance_statistics_path.write_text(_performance_statistics_markdown(sample["returns"]), encoding="utf-8")
+    outputs["performance_statistics"] = performance_statistics_path
 
-    table_perf_stats_path = output_path / GALLERY_ARTIFACTS["table_perf_stats"]
-    table_perf_stats_path.write_text(
-        table_perf_stats(sample["returns"], benchmark=sample["benchmark"]).as_raw_html(),
+    table_performance_statistics_path = output_path / GALLERY_ARTIFACTS["table_performance_statistics"]
+    table_performance_statistics_path.write_text(
+        table_performance_statistics(sample["returns"], benchmark=sample["benchmark"]).as_raw_html(),
         encoding="utf-8",
     )
-    outputs["table_perf_stats"] = table_perf_stats_path
+    outputs["table_performance_statistics"] = table_performance_statistics_path
 
-    table_perf_stats_markdown_path = output_path / GALLERY_ARTIFACTS["table_perf_stats_markdown"]
-    table_perf_stats_markdown_path.write_text(
-        _table_perf_stats_markdown(sample["returns"], sample["benchmark"]),
+    table_performance_statistics_markdown_path = output_path / GALLERY_ARTIFACTS["table_performance_statistics_markdown"]
+    table_performance_statistics_markdown_path.write_text(
+        _table_performance_statistics_markdown(sample["returns"], sample["benchmark"]),
         encoding="utf-8",
     )
-    outputs["table_perf_stats_markdown"] = table_perf_stats_markdown_path
+    outputs["table_performance_statistics_markdown"] = table_performance_statistics_markdown_path
 
     table_period_returns_path = output_path / GALLERY_ARTIFACTS["table_period_returns"]
     table_period_returns_path.write_text(

@@ -30,8 +30,8 @@ from finance_plots import (
     plot_quantile_returns_bar,
     plot_top_bottom_quantile_turnover,
     plot_cumulative_factor_returns,
-    perf_stats,
-    table_perf_stats,
+    performance_statistics,
+    table_performance_statistics,
     table_period_returns,
     table_drawdowns,
     table_cost_breakdown,
@@ -65,13 +65,13 @@ Cumulative strategy returns with optional benchmark and out-of-sample shading.
 
 ![plot_rolling_returns](../assets/gallery/plot_rolling_returns.png)
 
-### `plot_rolling_volatility(returns, window=63, periods_per_year=252, ax=None)`
+### `plot_rolling_volatility(returns, window=63, frequency="daily", ax=None)`
 
 Rolling annualized volatility.
 
 ![plot_rolling_volatility](../assets/gallery/plot_rolling_volatility.png)
 
-### `plot_rolling_sharpe(returns, window=63, periods_per_year=252, ax=None)`
+### `plot_rolling_sharpe(returns, window=63, frequency="daily", ax=None)`
 
 Rolling annualized Sharpe ratio.
 
@@ -159,9 +159,55 @@ Distribution of implementation-shortfall slippage in basis points.
 
 ![plot_execution_quality](../assets/gallery/plot_execution_quality.png)
 
+## Portfolio, Attribution, and Execution Plots
+
+### `plot_efficient_frontier(expected_returns, covariance, points=50, ax=None)`
+
+Long-only mean-variance efficient frontier.
+
+### `plot_market_impact_curve(impact_frame, participation_col="participation_rate", impact_col="impact_bps", ax=None)`
+
+Market impact against participation rate.
+
+### `plot_execution_timeline(executions, time_col="timestamp", executed_col="executed_qty", target_col="target_qty", ax=None)`
+
+Cumulative execution versus target trajectory.
+
+### `plot_cost_breakdown_bar(costs, component_col="component", value_col="total", ax=None)`
+
+Signed cost contribution by component.
+
+### `plot_return_attribution_stacked(attribution, time_col=None, ax=None)`
+
+Stacked return attribution through time.
+
+### `plot_portfolio_weight_evolution(weights, ax=None)`
+
+Portfolio weights through time.
+
+### `plot_weight_diff(current, target, ax=None)`
+
+Target-minus-current weight differences.
+
+### `plot_risk_decomposition_stacked(decomposition, ax=None)`
+
+Stacked risk contributions.
+
+### `plot_factor_exposure_heatmap(exposures, ax=None)`
+
+Asset-by-factor exposure heatmap.
+
+### `plot_correlation_matrix(covariance_or_correlation, labels=None, ax=None)`
+
+Correlation heatmap from a covariance or correlation matrix.
+
+### `plot_covariance_eigenvalues(covariance, ax=None)`
+
+Ordered covariance eigenvalues.
+
 ## Alpha-Analysis Plots
 
-### `plot_ic_ts(ic, rolling_window=21, ax=None)`
+### `plot_ic_ts(ic, window=21, ax=None)`
 
 Information-coefficient time series with a rolling mean overlay.
 
@@ -217,21 +263,21 @@ Compounded long-short factor return path.
 
 ## Performance Tables
 
-### `perf_stats(returns, periods_per_year=252)`
+### `performance_statistics(returns, frequency="daily")`
 
 Compute scalar performance statistics.
 
-```{include} ../assets/gallery/perf_stats.md
+```{include} ../assets/gallery/performance_statistics.md
 ```
 
-### `table_perf_stats(returns, benchmark=None, periods_per_year=252)`
+### `table_performance_statistics(returns, benchmark=None, frequency="daily")`
 
 Build a Great Tables performance summary.
 
-```{include} ../assets/gallery/table_perf_stats.md
+```{include} ../assets/gallery/table_performance_statistics.md
 ```
 
-[table_perf_stats.html](../assets/gallery/table_perf_stats.html)
+[table_performance_statistics.html](../assets/gallery/table_performance_statistics.html)
 
 ### `table_period_returns(returns, period="year")`
 
@@ -302,9 +348,9 @@ Build a Great Tables quantile count and signal-statistics summary.
 
 ## Example Artifact Helper
 
-| Function                                                                   | Description                                              |
-| -------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `finance_plots.gallery.generate_gallery(output_dir="docs/assets/gallery")` | Write one example artifact per current public plot/table |
+| Function                                                                   | Description                                       |
+| -------------------------------------------------------------------------- | ------------------------------------------------- |
+| `finance_plots.gallery.generate_gallery(output_dir="docs/assets/gallery")` | Write maintained example plot and table artifacts |
 
 ______________________________________________________________________
 
@@ -347,6 +393,28 @@ ______________________________________________________________________
 
 .. autofunction:: plot_execution_quality
 
+.. autofunction:: plot_efficient_frontier
+
+.. autofunction:: plot_market_impact_curve
+
+.. autofunction:: plot_execution_timeline
+
+.. autofunction:: plot_cost_breakdown_bar
+
+.. autofunction:: plot_return_attribution_stacked
+
+.. autofunction:: plot_portfolio_weight_evolution
+
+.. autofunction:: plot_weight_diff
+
+.. autofunction:: plot_risk_decomposition_stacked
+
+.. autofunction:: plot_factor_exposure_heatmap
+
+.. autofunction:: plot_correlation_matrix
+
+.. autofunction:: plot_covariance_eigenvalues
+
 .. autofunction:: plot_ic_ts
 
 .. autofunction:: plot_ic_hist
@@ -365,9 +433,9 @@ ______________________________________________________________________
 
 .. autofunction:: plot_cumulative_factor_returns
 
-.. autofunction:: perf_stats
+.. autofunction:: performance_statistics
 
-.. autofunction:: table_perf_stats
+.. autofunction:: table_performance_statistics
 
 .. autofunction:: table_period_returns
 

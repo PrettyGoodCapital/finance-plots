@@ -48,12 +48,12 @@ def _series(values: Any, *, name: str = "value") -> pd.Series:
     return pd.Series(data, index=index, name=name)
 
 
-def plot_ic_ts(ic: Any, *, rolling_window: int = 21, ax: Axes | None = None) -> Figure:
+def plot_ic_ts(ic: Any, *, window: int = 21, ax: Axes | None = None) -> Figure:
     """Plot an information-coefficient time series."""
     series = _series(ic, name="ic")
     fig, ax = _new_axes(ax)
     ax.plot(series.index, series.to_numpy(), color="#4c78a8", linewidth=1.1, label="IC")
-    ax.plot(series.index, series.rolling(rolling_window).mean(), color="#f58518", linewidth=1.2, label="rolling mean")
+    ax.plot(series.index, series.rolling(window).mean(), color="#f58518", linewidth=1.2, label="rolling mean")
     ax.axhline(0.0, color="black", linewidth=0.5)
     ax.set_title("Information coefficient")
     ax.set_ylabel("IC")

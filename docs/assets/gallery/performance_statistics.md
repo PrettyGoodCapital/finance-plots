@@ -2,8 +2,8 @@
 | Metric | Value |
 | --- | --- |
 | Cumulative return | -6.64% |
-| Annualised return | -2.26% |
-| Annualised volatility | 19.82% |
+| Annualized return | -2.26% |
+| Annualized volatility | 19.82% |
 | Sharpe ratio | -0.02 |
 | Sortino ratio | -0.02 |
 | Max drawdown | -36.56% |
