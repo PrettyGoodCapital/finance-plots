@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Examples" href="docs/src/EXAMPLES.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>finance plots v0.1.0</title>
+        <title>finance plots v0.2.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></div></a>
+      <a href="#"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
   
-  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></span>
+  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -273,7 +273,7 @@ factor returns.</p></li>
 </pre></div>
 </div>
 <p>The gallery and documentation examples use the released data/calculation stack:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;finance-plots[examples]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"finance-plots[examples]"</span>
 </pre></div>
 </div>
 </section>
@@ -290,10 +290,10 @@ factor returns.</p></li>
 <span class="kn">import</span><span class="w"> </span><span class="nn">finance_plots</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fp</span>
 
 <span class="n">start_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">prices</span> <span class="o">=</span> <span class="n">generate_prices</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;ACME&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">start_ms</span><span class="o">=</span><span class="n">start_ms</span><span class="p">)</span>
+<span class="n">prices</span> <span class="o">=</span> <span class="n">generate_prices</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">"ACME"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">start_ms</span><span class="o">=</span><span class="n">start_ms</span><span class="p">)</span>
 <span class="n">returns</span> <span class="o">=</span> <span class="n">prices</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
-    <span class="n">fc</span><span class="o">.</span><span class="n">simple_returns</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ret&quot;</span><span class="p">),</span>
-<span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;ret&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">()[</span><span class="s2">&quot;ret&quot;</span><span class="p">]</span>
+    <span class="n">fc</span><span class="o">.</span><span class="n">simple_returns</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"price"</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">"ret"</span><span class="p">),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"ret"</span><span class="p">)</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">()[</span><span class="s2">"ret"</span><span class="p">]</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">plot_rolling_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
 </pre></div>
@@ -401,10 +401,10 @@ factor returns.</p></li>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">perf_stats(returns)</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">performance_statistics(returns)</span></code></p></td>
 <td><p>Dictionary of cumulative return, annualized return/volatility, Sharpe, Sortino, max drawdown, and Calmar</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_perf_stats(returns,</span> <span class="pre">benchmark=None)</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_performance_statistics(returns,</span> <span class="pre">benchmark=None)</span></code></p></td>
 <td><p>Great Tables performance summary with optional benchmark column</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">table_period_returns(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code></p></td>
@@ -479,7 +479,7 @@ factor returns.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
+</div><script src="_static/documentation_options.js?v=938c9ccc"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

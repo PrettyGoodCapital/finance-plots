@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="prev" title="Examples" href="EXAMPLES.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>API - finance plots v0.1.0</title>
+        <title>API - finance plots v0.2.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></div></a>
+      <a href="../../index.html"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></span>
+  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -267,8 +267,8 @@
     <span class="n">plot_quantile_returns_bar</span><span class="p">,</span>
     <span class="n">plot_top_bottom_quantile_turnover</span><span class="p">,</span>
     <span class="n">plot_cumulative_factor_returns</span><span class="p">,</span>
-    <span class="n">perf_stats</span><span class="p">,</span>
-    <span class="n">table_perf_stats</span><span class="p">,</span>
+    <span class="n">performance_statistics</span><span class="p">,</span>
+    <span class="n">table_performance_statistics</span><span class="p">,</span>
     <span class="n">table_period_returns</span><span class="p">,</span>
     <span class="n">table_drawdowns</span><span class="p">,</span>
     <span class="n">table_cost_breakdown</span><span class="p">,</span>
@@ -298,13 +298,13 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <p>Cumulative strategy returns with optional benchmark and out-of-sample shading.</p>
 <p><img alt="plot_rolling_returns" src="../../_images/plot_rolling_returns.png" /></p>
 </section>
-<section id="plot-rolling-volatility-returns-window-63-periods-per-year-252-ax-none">
-<h3><code class="docutils literal notranslate"><span class="pre">plot_rolling_volatility(returns,</span> <span class="pre">window=63,</span> <span class="pre">periods_per_year=252,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-rolling-volatility-returns-window-63-periods-per-year-252-ax-none" title="Link to this heading">¶</a></h3>
+<section id="plot-rolling-volatility-returns-window-63-frequency-daily-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_rolling_volatility(returns,</span> <span class="pre">window=63,</span> <span class="pre">frequency=&quot;daily&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-rolling-volatility-returns-window-63-frequency-daily-ax-none" title="Link to this heading">¶</a></h3>
 <p>Rolling annualized volatility.</p>
 <p><img alt="plot_rolling_volatility" src="../../_images/plot_rolling_volatility.png" /></p>
 </section>
-<section id="plot-rolling-sharpe-returns-window-63-periods-per-year-252-ax-none">
-<h3><code class="docutils literal notranslate"><span class="pre">plot_rolling_sharpe(returns,</span> <span class="pre">window=63,</span> <span class="pre">periods_per_year=252,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-rolling-sharpe-returns-window-63-periods-per-year-252-ax-none" title="Link to this heading">¶</a></h3>
+<section id="plot-rolling-sharpe-returns-window-63-frequency-daily-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_rolling_sharpe(returns,</span> <span class="pre">window=63,</span> <span class="pre">frequency=&quot;daily&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-rolling-sharpe-returns-window-63-frequency-daily-ax-none" title="Link to this heading">¶</a></h3>
 <p>Rolling annualized Sharpe ratio.</p>
 <p><img alt="plot_rolling_sharpe" src="../../_images/plot_rolling_sharpe.png" /></p>
 </section>
@@ -380,10 +380,57 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <p><img alt="plot_execution_quality" src="../../_images/plot_execution_quality.png" /></p>
 </section>
 </section>
+<section id="portfolio-attribution-and-execution-plots">
+<h2>Portfolio, Attribution, and Execution Plots<a class="headerlink" href="#portfolio-attribution-and-execution-plots" title="Link to this heading">¶</a></h2>
+<section id="plot-efficient-frontier-expected-returns-covariance-points-50-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_efficient_frontier(expected_returns,</span> <span class="pre">covariance,</span> <span class="pre">points=50,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-efficient-frontier-expected-returns-covariance-points-50-ax-none" title="Link to this heading">¶</a></h3>
+<p>Long-only mean-variance efficient frontier.</p>
+</section>
+<section id="plot-market-impact-curve-impact-frame-participation-col-participation-rate-impact-col-impact-bps-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_market_impact_curve(impact_frame,</span> <span class="pre">participation_col=&quot;participation_rate&quot;,</span> <span class="pre">impact_col=&quot;impact_bps&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-market-impact-curve-impact-frame-participation-col-participation-rate-impact-col-impact-bps-ax-none" title="Link to this heading">¶</a></h3>
+<p>Market impact against participation rate.</p>
+</section>
+<section id="plot-execution-timeline-executions-time-col-timestamp-executed-col-executed-qty-target-col-target-qty-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_execution_timeline(executions,</span> <span class="pre">time_col=&quot;timestamp&quot;,</span> <span class="pre">executed_col=&quot;executed_qty&quot;,</span> <span class="pre">target_col=&quot;target_qty&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-execution-timeline-executions-time-col-timestamp-executed-col-executed-qty-target-col-target-qty-ax-none" title="Link to this heading">¶</a></h3>
+<p>Cumulative execution versus target trajectory.</p>
+</section>
+<section id="plot-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_cost_breakdown_bar(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none" title="Link to this heading">¶</a></h3>
+<p>Signed cost contribution by component.</p>
+</section>
+<section id="plot-return-attribution-stacked-attribution-time-col-none-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_return_attribution_stacked(attribution,</span> <span class="pre">time_col=None,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-return-attribution-stacked-attribution-time-col-none-ax-none" title="Link to this heading">¶</a></h3>
+<p>Stacked return attribution through time.</p>
+</section>
+<section id="plot-portfolio-weight-evolution-weights-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_portfolio_weight_evolution(weights,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-portfolio-weight-evolution-weights-ax-none" title="Link to this heading">¶</a></h3>
+<p>Portfolio weights through time.</p>
+</section>
+<section id="plot-weight-diff-current-target-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_weight_diff(current,</span> <span class="pre">target,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-weight-diff-current-target-ax-none" title="Link to this heading">¶</a></h3>
+<p>Target-minus-current weight differences.</p>
+</section>
+<section id="plot-risk-decomposition-stacked-decomposition-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_risk_decomposition_stacked(decomposition,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-risk-decomposition-stacked-decomposition-ax-none" title="Link to this heading">¶</a></h3>
+<p>Stacked risk contributions.</p>
+</section>
+<section id="plot-factor-exposure-heatmap-exposures-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_factor_exposure_heatmap(exposures,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-factor-exposure-heatmap-exposures-ax-none" title="Link to this heading">¶</a></h3>
+<p>Asset-by-factor exposure heatmap.</p>
+</section>
+<section id="plot-correlation-matrix-covariance-or-correlation-labels-none-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_correlation_matrix(covariance_or_correlation,</span> <span class="pre">labels=None,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-correlation-matrix-covariance-or-correlation-labels-none-ax-none" title="Link to this heading">¶</a></h3>
+<p>Correlation heatmap from a covariance or correlation matrix.</p>
+</section>
+<section id="plot-covariance-eigenvalues-covariance-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_covariance_eigenvalues(covariance,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-covariance-eigenvalues-covariance-ax-none" title="Link to this heading">¶</a></h3>
+<p>Ordered covariance eigenvalues.</p>
+</section>
+</section>
 <section id="alpha-analysis-plots">
 <h2>Alpha-Analysis Plots<a class="headerlink" href="#alpha-analysis-plots" title="Link to this heading">¶</a></h2>
-<section id="plot-ic-ts-ic-rolling-window-21-ax-none">
-<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">rolling_window=21,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-ts-ic-rolling-window-21-ax-none" title="Link to this heading">¶</a></h3>
+<section id="plot-ic-ts-ic-window-21-ax-none">
+<h3><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">window=21,</span> <span class="pre">ax=None)</span></code><a class="headerlink" href="#plot-ic-ts-ic-window-21-ax-none" title="Link to this heading">¶</a></h3>
 <p>Information-coefficient time series with a rolling mean overlay.</p>
 <p><img alt="plot_ic_ts" src="../../_images/plot_ic_ts.png" /></p>
 </section>
@@ -430,8 +477,8 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 </section>
 <section id="performance-tables">
 <h2>Performance Tables<a class="headerlink" href="#performance-tables" title="Link to this heading">¶</a></h2>
-<section id="perf-stats-returns-periods-per-year-252">
-<h3><code class="docutils literal notranslate"><span class="pre">perf_stats(returns,</span> <span class="pre">periods_per_year=252)</span></code><a class="headerlink" href="#perf-stats-returns-periods-per-year-252" title="Link to this heading">¶</a></h3>
+<section id="performance-statistics-returns-frequency-daily">
+<h3><code class="docutils literal notranslate"><span class="pre">performance_statistics(returns,</span> <span class="pre">frequency=&quot;daily&quot;)</span></code><a class="headerlink" href="#performance-statistics-returns-frequency-daily" title="Link to this heading">¶</a></h3>
 <p>Compute scalar performance statistics.</p>
 <!-- markdownlint-disable-file MD041 -->
 <div class="table-wrapper colwidths-auto docutils container">
@@ -445,10 +492,10 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <tr class="row-even"><td><p>Cumulative return</p></td>
 <td><p>-6.64%</p></td>
 </tr>
-<tr class="row-odd"><td><p>Annualised return</p></td>
+<tr class="row-odd"><td><p>Annualized return</p></td>
 <td><p>-2.26%</p></td>
 </tr>
-<tr class="row-even"><td><p>Annualised volatility</p></td>
+<tr class="row-even"><td><p>Annualized volatility</p></td>
 <td><p>19.82%</p></td>
 </tr>
 <tr class="row-odd"><td><p>Sharpe ratio</p></td>
@@ -467,8 +514,8 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 </table>
 </div>
 </section>
-<section id="table-perf-stats-returns-benchmark-none-periods-per-year-252">
-<h3><code class="docutils literal notranslate"><span class="pre">table_perf_stats(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">periods_per_year=252)</span></code><a class="headerlink" href="#table-perf-stats-returns-benchmark-none-periods-per-year-252" title="Link to this heading">¶</a></h3>
+<section id="table-performance-statistics-returns-benchmark-none-frequency-daily">
+<h3><code class="docutils literal notranslate"><span class="pre">table_performance_statistics(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">frequency=&quot;daily&quot;)</span></code><a class="headerlink" href="#table-performance-statistics-returns-benchmark-none-frequency-daily" title="Link to this heading">¶</a></h3>
 <p>Build a Great Tables performance summary.</p>
 <!-- markdownlint-disable-file MD041 -->
 <div class="table-wrapper colwidths-auto docutils container">
@@ -484,11 +531,11 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 <td><p>-6.64%</p></td>
 <td><p>21.19%</p></td>
 </tr>
-<tr class="row-odd"><td><p>Annualised return</p></td>
+<tr class="row-odd"><td><p>Annualized return</p></td>
 <td><p>-2.26%</p></td>
 <td><p>6.62%</p></td>
 </tr>
-<tr class="row-even"><td><p>Annualised volatility</p></td>
+<tr class="row-even"><td><p>Annualized volatility</p></td>
 <td><p>19.82%</p></td>
 <td><p>16.68%</p></td>
 </tr>
@@ -511,7 +558,7 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 </tbody>
 </table>
 </div>
-<p><a class="reference download internal" download="" href="../../_downloads/e93fecd50413220573762bf7394dfcff/table_perf_stats.html"><span class="xref download myst">table_perf_stats.html</span></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/2156e389dbfbf918a66000c504927678/table_performance_statistics.html"><span class="xref download myst">table_performance_statistics.html</span></a></p>
 </section>
 <section id="table-period-returns-returns-period-year">
 <h3><code class="docutils literal notranslate"><span class="pre">table_period_returns(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code><a class="headerlink" href="#table-period-returns-returns-period-year" title="Link to this heading">¶</a></h3>
@@ -856,7 +903,7 @@ Polars Series, numpy arrays, and other supported backends. Plot functions return
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">finance_plots.gallery.generate_gallery(output_dir=&quot;docs/assets/gallery&quot;)</span></code></p></td>
-<td><p>Write one example artifact per current public plot/table</p></td>
+<td><p>Write maintained example plot and table artifacts</p></td>
 </tr>
 </tbody>
 </table>
@@ -910,14 +957,14 @@ shaded.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="finance_plots.plot_rolling_volatility">
-<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_rolling_volatility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">63</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">252</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_returns.html#plot_rolling_volatility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_rolling_volatility" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_rolling_volatility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">63</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Frequency</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Frequency.Day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_returns.html#plot_rolling_volatility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_rolling_volatility" title="Link to this definition">¶</a></dt>
 <dd><p>Plot rolling annualized volatility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>returns</strong> – 1-D series of periodic returns.</p></li>
 <li><p><strong>window</strong> – Rolling window length in observations.</p></li>
-<li><p><strong>periods_per_year</strong> – Annualization factor.</p></li>
+<li><p><strong>frequency</strong> – Observation frequency alias, enum, or observations per year.</p></li>
 <li><p><strong>ax</strong> – Existing matplotlib <code class="docutils literal notranslate"><span class="pre">Axes</span></code> to draw onto.</p></li>
 </ul>
 </dd>
@@ -929,14 +976,14 @@ shaded.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="finance_plots.plot_rolling_sharpe">
-<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_rolling_sharpe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">63</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">252</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_returns.html#plot_rolling_sharpe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_rolling_sharpe" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_rolling_sharpe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">63</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Frequency</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Frequency.Day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_returns.html#plot_rolling_sharpe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_rolling_sharpe" title="Link to this definition">¶</a></dt>
 <dd><p>Plot rolling annualized Sharpe ratio.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>returns</strong> – 1-D series of periodic returns.</p></li>
 <li><p><strong>window</strong> – Rolling window length in observations.</p></li>
-<li><p><strong>periods_per_year</strong> – Annualization factor.</p></li>
+<li><p><strong>frequency</strong> – Observation frequency alias, enum, or observations per year.</p></li>
 <li><p><strong>ax</strong> – Existing matplotlib <code class="docutils literal notranslate"><span class="pre">Axes</span></code> to draw onto.</p></li>
 </ul>
 </dd>
@@ -1175,8 +1222,68 @@ where <code class="docutils literal notranslate"><span class="pre">N</span></cod
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_efficient_frontier">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_efficient_frontier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_efficient_frontier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_efficient_frontier" title="Link to this definition">¶</a></dt>
+<dd><p>Plot a long-only unconstrained mean-variance efficient frontier.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_market_impact_curve">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_market_impact_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">participation_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'participation_rate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'impact_bps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_market_impact_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_market_impact_curve" title="Link to this definition">¶</a></dt>
+<dd><p>Plot market impact against participation rate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_execution_timeline">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_execution_timeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executed_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'executed_qty'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'target_qty'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_execution_timeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_execution_timeline" title="Link to this definition">¶</a></dt>
+<dd><p>Plot cumulative executed quantity versus target trajectory.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_cost_breakdown_bar">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_cost_breakdown_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'component'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'total'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_cost_breakdown_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_cost_breakdown_bar" title="Link to this definition">¶</a></dt>
+<dd><p>Plot signed cost contributions by component.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_return_attribution_stacked">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_return_attribution_stacked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_return_attribution_stacked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_return_attribution_stacked" title="Link to this definition">¶</a></dt>
+<dd><p>Plot stacked return attribution through time.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_portfolio_weight_evolution">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_portfolio_weight_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_portfolio_weight_evolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_portfolio_weight_evolution" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_weight_diff">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_weight_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_weight_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_weight_diff" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_risk_decomposition_stacked">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_risk_decomposition_stacked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decomposition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_risk_decomposition_stacked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_risk_decomposition_stacked" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_factor_exposure_heatmap">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_factor_exposure_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exposures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_factor_exposure_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_factor_exposure_heatmap" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_correlation_matrix">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_correlation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covariance_or_correlation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_correlation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_correlation_matrix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="finance_plots.plot_covariance_eigenvalues">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_covariance_eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_portfolio.html#plot_covariance_eigenvalues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_covariance_eigenvalues" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="finance_plots.plot_ic_ts">
-<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_ts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rolling_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_ts" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">plot_ic_ts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../../_modules/finance_plots/plots/_alpha.html#plot_ic_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.plot_ic_ts" title="Link to this definition">¶</a></dt>
 <dd><p>Plot an information-coefficient time series.</p>
 </dd></dl>
 
@@ -1229,26 +1336,26 @@ where <code class="docutils literal notranslate"><span class="pre">N</span></cod
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="finance_plots.perf_stats">
-<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">perf_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">252</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/finance_plots/tables/_perf.html#perf_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.perf_stats" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="finance_plots.performance_statistics">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">performance_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Frequency</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Frequency.Day</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/finance_plots/tables/_perf.html#performance_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.performance_statistics" title="Link to this definition">¶</a></dt>
 <dd><p>Compute summary performance statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>returns</strong> – 1-D series of periodic returns (narwhals-compatible).</p></li>
-<li><p><strong>periods_per_year</strong> – Annualization factor.</p></li>
+<li><p><strong>frequency</strong> – Observation frequency alias, enum, or observations per year.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dict keyed by <code class="docutils literal notranslate"><span class="pre">cum_return</span></code>, <code class="docutils literal notranslate"><span class="pre">ann_return</span></code>, <code class="docutils literal notranslate"><span class="pre">ann_vol</span></code>,
+<dd class="field-even"><p>Dict keyed by <code class="docutils literal notranslate"><span class="pre">cumulative_return</span></code>, <code class="docutils literal notranslate"><span class="pre">annualized_return</span></code>, <code class="docutils literal notranslate"><span class="pre">annualized_volatility</span></code>,
 <code class="docutils literal notranslate"><span class="pre">sharpe</span></code>, <code class="docutils literal notranslate"><span class="pre">sortino</span></code>, <code class="docutils literal notranslate"><span class="pre">max_drawdown</span></code>, <code class="docutils literal notranslate"><span class="pre">calmar</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="finance_plots.table_perf_stats">
-<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_perf_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">252</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_perf.html#table_perf_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_perf_stats" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="finance_plots.table_performance_statistics">
+<span class="sig-prename descclassname"><span class="pre">finance_plots.</span></span><span class="sig-name descname"><span class="pre">table_performance_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Frequency</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Frequency.Day</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/finance_plots/tables/_perf.html#table_performance_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#finance_plots.table_performance_statistics" title="Link to this definition">¶</a></dt>
 <dd><p>Build a <code class="docutils literal notranslate"><span class="pre">great_tables.GT</span></code> performance-stats table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1256,7 +1363,7 @@ where <code class="docutils literal notranslate"><span class="pre">N</span></cod
 <li><p><strong>returns</strong> – 1-D series of periodic returns.</p></li>
 <li><p><strong>benchmark</strong> – Optional benchmark return series. When provided, a
 second value column is added to the table.</p></li>
-<li><p><strong>periods_per_year</strong> – Annualization factor.</p></li>
+<li><p><strong>frequency</strong> – Observation frequency alias, enum, or observations per year.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1415,8 +1522,8 @@ row per metric.</p>
 <li><a class="reference internal" href="#return-and-risk-plots">Return and Risk Plots</a><ul>
 <li><a class="reference internal" href="#plot-returns-returns-live-start-none-log-scale-false-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_returns(returns,</span> <span class="pre">live_start=None,</span> <span class="pre">log_scale=False,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-rolling-returns-returns-benchmark-none-live-start-none-log-scale-false-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_returns(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">live_start=None,</span> <span class="pre">log_scale=False,</span> <span class="pre">ax=None)</span></code></a></li>
-<li><a class="reference internal" href="#plot-rolling-volatility-returns-window-63-periods-per-year-252-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_volatility(returns,</span> <span class="pre">window=63,</span> <span class="pre">periods_per_year=252,</span> <span class="pre">ax=None)</span></code></a></li>
-<li><a class="reference internal" href="#plot-rolling-sharpe-returns-window-63-periods-per-year-252-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_sharpe(returns,</span> <span class="pre">window=63,</span> <span class="pre">periods_per_year=252,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-rolling-volatility-returns-window-63-frequency-daily-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_volatility(returns,</span> <span class="pre">window=63,</span> <span class="pre">frequency=&quot;daily&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-rolling-sharpe-returns-window-63-frequency-daily-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_sharpe(returns,</span> <span class="pre">window=63,</span> <span class="pre">frequency=&quot;daily&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-rolling-beta-returns-benchmark-window-63-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_beta(returns,</span> <span class="pre">benchmark,</span> <span class="pre">window=63,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-rolling-correlation-returns-benchmark-window-63-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_rolling_correlation(returns,</span> <span class="pre">benchmark,</span> <span class="pre">window=63,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-return-scatter-returns-benchmark-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_return_scatter(returns,</span> <span class="pre">benchmark,</span> <span class="pre">ax=None)</span></code></a></li>
@@ -1438,8 +1545,22 @@ row per metric.</p>
 <li><a class="reference internal" href="#plot-execution-quality-executions-slippage-col-implementation-shortfall-bps-bins-20-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_execution_quality(executions,</span> <span class="pre">slippage_col=&quot;implementation_shortfall_bps&quot;,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#portfolio-attribution-and-execution-plots">Portfolio, Attribution, and Execution Plots</a><ul>
+<li><a class="reference internal" href="#plot-efficient-frontier-expected-returns-covariance-points-50-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_efficient_frontier(expected_returns,</span> <span class="pre">covariance,</span> <span class="pre">points=50,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-market-impact-curve-impact-frame-participation-col-participation-rate-impact-col-impact-bps-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_market_impact_curve(impact_frame,</span> <span class="pre">participation_col=&quot;participation_rate&quot;,</span> <span class="pre">impact_col=&quot;impact_bps&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-execution-timeline-executions-time-col-timestamp-executed-col-executed-qty-target-col-target-qty-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_execution_timeline(executions,</span> <span class="pre">time_col=&quot;timestamp&quot;,</span> <span class="pre">executed_col=&quot;executed_qty&quot;,</span> <span class="pre">target_col=&quot;target_qty&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-cost-breakdown-bar-costs-component-col-component-value-col-total-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_cost_breakdown_bar(costs,</span> <span class="pre">component_col=&quot;component&quot;,</span> <span class="pre">value_col=&quot;total&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-return-attribution-stacked-attribution-time-col-none-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_return_attribution_stacked(attribution,</span> <span class="pre">time_col=None,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-portfolio-weight-evolution-weights-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_portfolio_weight_evolution(weights,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-weight-diff-current-target-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_weight_diff(current,</span> <span class="pre">target,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-risk-decomposition-stacked-decomposition-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_risk_decomposition_stacked(decomposition,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-factor-exposure-heatmap-exposures-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_factor_exposure_heatmap(exposures,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-correlation-matrix-covariance-or-correlation-labels-none-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_correlation_matrix(covariance_or_correlation,</span> <span class="pre">labels=None,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-covariance-eigenvalues-covariance-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_covariance_eigenvalues(covariance,</span> <span class="pre">ax=None)</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#alpha-analysis-plots">Alpha-Analysis Plots</a><ul>
-<li><a class="reference internal" href="#plot-ic-ts-ic-rolling-window-21-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">rolling_window=21,</span> <span class="pre">ax=None)</span></code></a></li>
+<li><a class="reference internal" href="#plot-ic-ts-ic-window-21-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_ts(ic,</span> <span class="pre">window=21,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-ic-hist-ic-bins-20-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_hist(ic,</span> <span class="pre">bins=20,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-ic-qq-ic-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_qq(ic,</span> <span class="pre">ax=None)</span></code></a></li>
 <li><a class="reference internal" href="#plot-ic-by-group-data-group-col-group-ic-col-ic-ax-none"><code class="docutils literal notranslate"><span class="pre">plot_ic_by_group(data,</span> <span class="pre">group_col=&quot;group&quot;,</span> <span class="pre">ic_col=&quot;ic&quot;,</span> <span class="pre">ax=None)</span></code></a></li>
@@ -1451,8 +1572,8 @@ row per metric.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#performance-tables">Performance Tables</a><ul>
-<li><a class="reference internal" href="#perf-stats-returns-periods-per-year-252"><code class="docutils literal notranslate"><span class="pre">perf_stats(returns,</span> <span class="pre">periods_per_year=252)</span></code></a></li>
-<li><a class="reference internal" href="#table-perf-stats-returns-benchmark-none-periods-per-year-252"><code class="docutils literal notranslate"><span class="pre">table_perf_stats(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">periods_per_year=252)</span></code></a></li>
+<li><a class="reference internal" href="#performance-statistics-returns-frequency-daily"><code class="docutils literal notranslate"><span class="pre">performance_statistics(returns,</span> <span class="pre">frequency=&quot;daily&quot;)</span></code></a></li>
+<li><a class="reference internal" href="#table-performance-statistics-returns-benchmark-none-frequency-daily"><code class="docutils literal notranslate"><span class="pre">table_performance_statistics(returns,</span> <span class="pre">benchmark=None,</span> <span class="pre">frequency=&quot;daily&quot;)</span></code></a></li>
 <li><a class="reference internal" href="#table-period-returns-returns-period-year"><code class="docutils literal notranslate"><span class="pre">table_period_returns(returns,</span> <span class="pre">period=&quot;year&quot;)</span></code></a></li>
 <li><a class="reference internal" href="#table-drawdowns-returns-top-5"><code class="docutils literal notranslate"><span class="pre">table_drawdowns(returns,</span> <span class="pre">top=5)</span></code></a></li>
 </ul>
@@ -1489,6 +1610,17 @@ row per metric.</p>
 <li><a class="reference internal" href="#finance_plots.plot_trading_cost_breakdown_bar"><code class="docutils literal notranslate"><span class="pre">plot_trading_cost_breakdown_bar()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_mfe_mae_scatter"><code class="docutils literal notranslate"><span class="pre">plot_mfe_mae_scatter()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_execution_quality"><code class="docutils literal notranslate"><span class="pre">plot_execution_quality()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_efficient_frontier"><code class="docutils literal notranslate"><span class="pre">plot_efficient_frontier()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_market_impact_curve"><code class="docutils literal notranslate"><span class="pre">plot_market_impact_curve()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_execution_timeline"><code class="docutils literal notranslate"><span class="pre">plot_execution_timeline()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_cost_breakdown_bar"><code class="docutils literal notranslate"><span class="pre">plot_cost_breakdown_bar()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_return_attribution_stacked"><code class="docutils literal notranslate"><span class="pre">plot_return_attribution_stacked()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_portfolio_weight_evolution"><code class="docutils literal notranslate"><span class="pre">plot_portfolio_weight_evolution()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_weight_diff"><code class="docutils literal notranslate"><span class="pre">plot_weight_diff()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_risk_decomposition_stacked"><code class="docutils literal notranslate"><span class="pre">plot_risk_decomposition_stacked()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_factor_exposure_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_factor_exposure_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_correlation_matrix"><code class="docutils literal notranslate"><span class="pre">plot_correlation_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.plot_covariance_eigenvalues"><code class="docutils literal notranslate"><span class="pre">plot_covariance_eigenvalues()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_ic_ts"><code class="docutils literal notranslate"><span class="pre">plot_ic_ts()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_ic_hist"><code class="docutils literal notranslate"><span class="pre">plot_ic_hist()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_ic_qq"><code class="docutils literal notranslate"><span class="pre">plot_ic_qq()</span></code></a></li>
@@ -1498,8 +1630,8 @@ row per metric.</p>
 <li><a class="reference internal" href="#finance_plots.plot_quantile_returns_bar"><code class="docutils literal notranslate"><span class="pre">plot_quantile_returns_bar()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_top_bottom_quantile_turnover"><code class="docutils literal notranslate"><span class="pre">plot_top_bottom_quantile_turnover()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.plot_cumulative_factor_returns"><code class="docutils literal notranslate"><span class="pre">plot_cumulative_factor_returns()</span></code></a></li>
-<li><a class="reference internal" href="#finance_plots.perf_stats"><code class="docutils literal notranslate"><span class="pre">perf_stats()</span></code></a></li>
-<li><a class="reference internal" href="#finance_plots.table_perf_stats"><code class="docutils literal notranslate"><span class="pre">table_perf_stats()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.performance_statistics"><code class="docutils literal notranslate"><span class="pre">performance_statistics()</span></code></a></li>
+<li><a class="reference internal" href="#finance_plots.table_performance_statistics"><code class="docutils literal notranslate"><span class="pre">table_performance_statistics()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_period_returns"><code class="docutils literal notranslate"><span class="pre">table_period_returns()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_drawdowns"><code class="docutils literal notranslate"><span class="pre">table_drawdowns()</span></code></a></li>
 <li><a class="reference internal" href="#finance_plots.table_cost_breakdown"><code class="docutils literal notranslate"><span class="pre">table_cost_breakdown()</span></code></a></li>
@@ -1523,7 +1655,7 @@ row per metric.</p>
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../_static/documentation_options.js?v=938c9ccc"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

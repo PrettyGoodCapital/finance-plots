@@ -111,16 +111,16 @@ fig = fp.plot_rolling_returns(returns)
 
 ## Current Table Catalog
 
-| Function                                       | Use it for                                                                                               |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `perf_stats(returns)`                          | Dictionary of cumulative return, annualized return/volatility, Sharpe, Sortino, max drawdown, and Calmar |
-| `table_perf_stats(returns, benchmark=None)`    | Great Tables performance summary with optional benchmark column                                          |
-| `table_period_returns(returns, period="year")` | Great Tables period-return summary                                                                       |
-| `table_drawdowns(returns, top=5)`              | Great Tables largest-drawdown-period summary                                                             |
-| `table_cost_breakdown(costs)`                  | Great Tables trading-cost attribution summary                                                            |
-| `table_round_trip_stats(trades)`               | Great Tables round-trip trade-quality summary                                                            |
-| `table_execution_quality(executions)`          | Great Tables implementation-shortfall summary                                                            |
-| `table_information(ic)`                        | Great Tables information-coefficient summary                                                             |
-| `table_returns_by_quantile(data)`              | Great Tables mean return by quantile                                                                     |
-| `table_turnover(data)`                         | Great Tables quantile-turnover summary                                                                   |
-| `table_quantile_statistics(data)`              | Great Tables quantile counts and signal statistics                                                       |
+| Function                                                | Use it for                                                                                               |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `performance_statistics(returns)`                       | Dictionary of cumulative return, annualized return/volatility, Sharpe, Sortino, max drawdown, and Calmar |
+| `table_performance_statistics(returns, benchmark=None)` | Great Tables performance summary with optional benchmark column                                          |
+| `table_period_returns(returns, period="year")`          | Great Tables period-return summary                                                                       |
+| `table_drawdowns(returns, top=5)`                       | Great Tables largest-drawdown-period summary                                                             |
+| `table_cost_breakdown(costs)`                           | Great Tables trading-cost attribution summary                                                            |
+| `table_round_trip_stats(trades)`                        | Great Tables round-trip trade-quality summary                                                            |
+| `table_execution_quality(executions)`                   | Great Tables implementation-shortfall summary                                                            |
+| `table_information(ic)`                                 | Great Tables information-coefficient summary                                                             |
+| `table_returns_by_quantile(data)`                       | Great Tables mean return by quantile                                                                     |
+| `table_turnover(data)`                                  | Great Tables quantile-turnover summary                                                                   |
+| `table_quantile_statistics(data)`                       | Great Tables quantile counts and signal statistics                                                       |

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>finance_plots.plots._returns - finance plots v0.1.0</title>
+        <title>finance_plots.plots._returns - finance plots v0.2.0</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></div></a>
+      <a href="../../../index.html"><div class="brand">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -187,7 +187,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   
-  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.1.0</code></span>
+  <span class="sidebar-brand-text">finance plots <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v0.2.0</code></span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -231,41 +231,35 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for finance_plots.plots._returns</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Return-series plots.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Return-series plots."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">finance_calcs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">finance_enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frequency</span><span class="p">,</span> <span class="n">to_frequency</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.._util</span><span class="w"> </span><span class="kn">import</span> <span class="n">cumulative_returns</span><span class="p">,</span> <span class="n">drawdown</span><span class="p">,</span> <span class="n">to_returns_and_index</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">finance_enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frequency</span><span class="p">,</span> <span class="n">to_frequency</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover - optional dependency for now</span>
-    <span class="n">Frequency</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore[assignment]</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_frequency</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>  <span class="c1"># type: ignore[no-redef]</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
-
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;plot_drawdown_underwater&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_return_scatter&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_returns&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_returns_bar&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_returns_dist&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_returns_heatmap&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_returns_timeseries&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_rolling_beta&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_rolling_correlation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_rolling_returns&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_rolling_sharpe&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_rolling_volatility&quot;</span><span class="p">,</span>
+    <span class="s2">"plot_drawdown_underwater"</span><span class="p">,</span>
+    <span class="s2">"plot_return_scatter"</span><span class="p">,</span>
+    <span class="s2">"plot_returns"</span><span class="p">,</span>
+    <span class="s2">"plot_returns_bar"</span><span class="p">,</span>
+    <span class="s2">"plot_returns_dist"</span><span class="p">,</span>
+    <span class="s2">"plot_returns_heatmap"</span><span class="p">,</span>
+    <span class="s2">"plot_returns_timeseries"</span><span class="p">,</span>
+    <span class="s2">"plot_rolling_beta"</span><span class="p">,</span>
+    <span class="s2">"plot_rolling_correlation"</span><span class="p">,</span>
+    <span class="s2">"plot_rolling_returns"</span><span class="p">,</span>
+    <span class="s2">"plot_rolling_sharpe"</span><span class="p">,</span>
+    <span class="s2">"plot_rolling_volatility"</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -285,44 +279,37 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_period_key</span><span class="p">(</span><span class="n">period</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">freq</span> <span class="o">=</span> <span class="n">to_frequency</span><span class="p">(</span><span class="n">period</span><span class="p">)</span> <span class="k">if</span> <span class="n">Frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">freq</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">Frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">freq</span>
+    <span class="k">return</span> <span class="n">to_frequency</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_expression_series</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"returns"</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_datetime_index</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">size</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">"2000-01-01"</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">dt_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dt_index</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">"2000-01-01"</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dt_index</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s2">"M"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">"2000-01-01"</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dt_index</span>
 
 
 <span class="n">_PERIOD_RETURN_SPEC</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;resample&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;daily&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;week&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;resample&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;weekly&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;resample&quot;</span><span class="p">:</span> <span class="s2">&quot;month_end&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;monthly&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;quarter&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;resample&quot;</span><span class="p">:</span> <span class="s2">&quot;quarter_end&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;quarterly&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;resample&quot;</span><span class="p">:</span> <span class="s2">&quot;year_end&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;annual&quot;</span><span class="p">},</span>
+    <span class="s2">"day"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"daily"</span><span class="p">},</span>
+    <span class="s2">"week"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"weekly"</span><span class="p">},</span>
+    <span class="s2">"month"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"monthly"</span><span class="p">},</span>
+    <span class="s2">"quarter"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"quarterly"</span><span class="p">},</span>
+    <span class="s2">"year"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"annual"</span><span class="p">},</span>
 <span class="p">}</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_resample_rule</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-    <span class="n">resample</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;resample&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">resample</span> <span class="o">==</span> <span class="s2">&quot;month_end&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">resample</span> <span class="o">==</span> <span class="s2">&quot;quarter_end&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">QuarterEnd</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">resample</span> <span class="o">==</span> <span class="s2">&quot;year_end&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">YearEnd</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">resample</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_period_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
@@ -330,22 +317,27 @@
 
     <span class="n">key</span> <span class="o">=</span> <span class="n">_period_key</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;period=</span><span class="si">{</span><span class="n">period</span><span class="si">!r}</span><span class="s2"> not supported (expected one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_PERIOD_RETURN_SPEC</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"period=</span><span class="si">{</span><span class="n">period</span><span class="si">!r}</span><span class="s2"> not supported (expected one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_PERIOD_RETURN_SPEC</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
     <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
     <span class="n">dt_index</span> <span class="o">=</span> <span class="n">_datetime_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-    <span class="n">safe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">values</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">safe</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">dt_index</span><span class="p">)</span>
-    <span class="n">resample</span> <span class="o">=</span> <span class="n">_resample_rule</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">resample</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">series</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">series</span><span class="p">)</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">resample</span><span class="p">)</span><span class="o">.</span><span class="n">prod</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">date_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dt_index</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">dt_index</span><span class="o">.</span><span class="n">tz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dt_index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"datetime64[ns]"</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"date"</span><span class="p">:</span> <span class="n">date_values</span><span class="p">,</span> <span class="s2">"returns"</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+            <span class="n">fc</span><span class="o">.</span><span class="n">period_bucket</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"date"</span><span class="p">),</span> <span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">"bucket"</span><span class="p">),</span>
+            <span class="n">fc</span><span class="o">.</span><span class="n">cumulative_return</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"returns"</span><span class="p">),</span> <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"date"</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">"period_return"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"bucket"</span><span class="p">,</span> <span class="s2">"period_return"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">"bucket"</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">"last"</span><span class="p">,</span> <span class="n">maintain_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"period_return"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"bucket"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_metric</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">series</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">series</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#1f77b4"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
@@ -359,7 +351,7 @@
     <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
     <span class="n">benchmark_values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">benchmark_values</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;benchmark length must match returns length&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"benchmark length must match returns length"</span><span class="p">)</span>
 
     <span class="n">strategy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
     <span class="n">bench</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">benchmark_values</span><span class="p">),</span> <span class="n">benchmark_values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
@@ -375,7 +367,7 @@
     <span class="n">log_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot cumulative returns without requiring a benchmark argument.</span>
+<span class="w">    </span><span class="sd">"""Plot cumulative returns without requiring a benchmark argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
@@ -386,7 +378,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">plot_rolling_returns</span><span class="p">(</span>
         <span class="n">returns</span><span class="p">,</span>
         <span class="n">live_start</span><span class="o">=</span><span class="n">live_start</span><span class="p">,</span>
@@ -406,7 +398,7 @@
     <span class="n">log_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot cumulative returns with an optional benchmark overlay.</span>
+<span class="w">    </span><span class="sd">"""Plot cumulative returns with an optional benchmark overlay.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns (narwhals-compatible).</span>
@@ -420,12 +412,12 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
     <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
     <span class="n">cum</span> <span class="o">=</span> <span class="n">cumulative_returns</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">cum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">cum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"strategy"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#1f77b4"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">benchmark</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">b_vals</span><span class="p">,</span> <span class="n">b_idx</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
@@ -434,10 +426,10 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">b_idx</span><span class="p">,</span>
             <span class="n">cumulative_returns</span><span class="p">(</span><span class="n">b_vals</span><span class="p">),</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;benchmark&quot;</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#888&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"benchmark"</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"#888"</span><span class="p">,</span>
             <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">live_start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -448,17 +440,17 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span>
             <span class="n">index</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">cutoff</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span>
             <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ffaa00&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"#ffaa00"</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;out-of-sample&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"out-of-sample"</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">log_scale</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;symlog&quot;</span><span class="p">,</span> <span class="n">linthresh</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative returns&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;cumulative return&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"symlog"</span><span class="p">,</span> <span class="n">linthresh</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cumulative returns"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"cumulative return"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
@@ -471,23 +463,23 @@
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">63</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">periods_per_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">252</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">Frequency</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Frequency</span><span class="o">.</span><span class="n">Day</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot rolling annualized volatility.</span>
+<span class="w">    </span><span class="sd">"""Plot rolling annualized volatility.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
 <span class="sd">        window: Rolling window length in observations.</span>
-<span class="sd">        periods_per_year: Annualization factor.</span>
+<span class="sd">        frequency: Observation frequency alias, enum, or observations per year.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">series</span> <span class="o">=</span> <span class="n">_indexed_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
-    <span class="n">vol</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period volatility&quot;</span><span class="p">,</span> <span class="s2">&quot;annualized volatility&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="n">_expression_series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">fc</span><span class="o">.</span><span class="n">annualized_volatility</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"returns"</span><span class="p">),</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period volatility"</span><span class="p">,</span> <span class="s2">"annualized volatility"</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
 
@@ -497,25 +489,23 @@
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">63</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">periods_per_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">252</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">Frequency</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Frequency</span><span class="o">.</span><span class="n">Day</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot rolling annualized Sharpe ratio.</span>
+<span class="w">    </span><span class="sd">"""Plot rolling annualized Sharpe ratio.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
 <span class="sd">        window: Rolling window length in observations.</span>
-<span class="sd">        periods_per_year: Annualization factor.</span>
+<span class="sd">        frequency: Observation frequency alias, enum, or observations per year.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">series</span> <span class="o">=</span> <span class="n">_indexed_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
-    <span class="n">rolling_mean</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="n">periods_per_year</span>
-    <span class="n">rolling_vol</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
-    <span class="n">sharpe</span> <span class="o">=</span> <span class="n">rolling_mean</span> <span class="o">/</span> <span class="n">rolling_vol</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">sharpe</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period Sharpe&quot;</span><span class="p">,</span> <span class="s2">&quot;Sharpe ratio&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="n">sharpe</span> <span class="o">=</span> <span class="n">_expression_series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">fc</span><span class="o">.</span><span class="n">sharpe</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"returns"</span><span class="p">),</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">sharpe</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period Sharpe"</span><span class="p">,</span> <span class="s2">"Sharpe ratio"</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
 
@@ -528,7 +518,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot rolling beta versus a benchmark return series.</span>
+<span class="w">    </span><span class="sd">"""Plot rolling beta versus a benchmark return series.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D strategy return series.</span>
@@ -538,10 +528,14 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">strategy</span><span class="p">,</span> <span class="n">bench</span> <span class="o">=</span> <span class="n">_paired_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">)</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">bench</span><span class="p">)</span> <span class="o">/</span> <span class="n">bench</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period beta&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"returns"</span><span class="p">:</span> <span class="n">strategy</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="s2">"benchmark"</span><span class="p">:</span> <span class="n">bench</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()})</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"returns"</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"benchmark"</span><span class="p">),</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">))</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">strategy</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period beta"</span><span class="p">,</span> <span class="s2">"beta"</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
 
@@ -554,7 +548,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot rolling correlation versus a benchmark return series.</span>
+<span class="w">    </span><span class="sd">"""Plot rolling correlation versus a benchmark return series.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D strategy return series.</span>
@@ -564,10 +558,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">strategy</span><span class="p">,</span> <span class="n">bench</span> <span class="o">=</span> <span class="n">_paired_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">)</span>
     <span class="n">corr</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">bench</span><span class="p">)</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period correlation&quot;</span><span class="p">,</span> <span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">_plot_metric</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Rolling </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">-period correlation"</span><span class="p">,</span> <span class="s2">"correlation"</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
@@ -581,7 +575,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot strategy returns against benchmark returns.</span>
+<span class="w">    </span><span class="sd">"""Plot strategy returns against benchmark returns.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D strategy return series.</span>
@@ -590,24 +584,24 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the scatter plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">strategy</span><span class="p">,</span> <span class="n">bench</span> <span class="o">=</span> <span class="n">_paired_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">bench</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#1f77b4"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">nanvar</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">line_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]),</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_x</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">line_x</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#d62728&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;beta </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Strategy versus benchmark returns&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;benchmark return&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;strategy return&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_x</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">line_x</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#d62728"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"beta </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Strategy versus benchmark returns"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"benchmark return"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"strategy return"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
@@ -621,7 +615,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Underwater drawdown plot.</span>
+<span class="w">    </span><span class="sd">"""Underwater drawdown plot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
@@ -630,15 +624,15 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the filled-area</span>
 <span class="sd">        drawdown plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
     <span class="n">dd</span> <span class="o">=</span> <span class="n">drawdown</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#d62728&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#d62728&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Drawdown (underwater)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;drawdown&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#d62728"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#d62728"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Drawdown (underwater)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"drawdown"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
@@ -646,36 +640,36 @@
 
 
 <span class="n">_HEATMAP_PERIOD_SPEC</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;col_attr&quot;</span><span class="p">:</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;col_count&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-        <span class="s2">&quot;col_labels&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;Jan&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Feb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Mar&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Apr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;May&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Jun&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Jul&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Aug&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Sep&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Oct&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Nov&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Dec&quot;</span><span class="p">,</span>
+    <span class="s2">"month"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"col_attr"</span><span class="p">:</span> <span class="s2">"month"</span><span class="p">,</span>
+        <span class="s2">"col_count"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">"col_labels"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">"Jan"</span><span class="p">,</span>
+            <span class="s2">"Feb"</span><span class="p">,</span>
+            <span class="s2">"Mar"</span><span class="p">,</span>
+            <span class="s2">"Apr"</span><span class="p">,</span>
+            <span class="s2">"May"</span><span class="p">,</span>
+            <span class="s2">"Jun"</span><span class="p">,</span>
+            <span class="s2">"Jul"</span><span class="p">,</span>
+            <span class="s2">"Aug"</span><span class="p">,</span>
+            <span class="s2">"Sep"</span><span class="p">,</span>
+            <span class="s2">"Oct"</span><span class="p">,</span>
+            <span class="s2">"Nov"</span><span class="p">,</span>
+            <span class="s2">"Dec"</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="s2">&quot;unit_label&quot;</span><span class="p">:</span> <span class="s2">&quot;monthly&quot;</span><span class="p">,</span>
+        <span class="s2">"unit_label"</span><span class="p">:</span> <span class="s2">"monthly"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;quarter&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;col_attr&quot;</span><span class="p">:</span> <span class="s2">&quot;quarter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;col_count&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;col_labels&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="s2">&quot;Q2&quot;</span><span class="p">,</span> <span class="s2">&quot;Q3&quot;</span><span class="p">,</span> <span class="s2">&quot;Q4&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;unit_label&quot;</span><span class="p">:</span> <span class="s2">&quot;quarterly&quot;</span><span class="p">,</span>
+    <span class="s2">"quarter"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"col_attr"</span><span class="p">:</span> <span class="s2">"quarter"</span><span class="p">,</span>
+        <span class="s2">"col_count"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"col_labels"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Q1"</span><span class="p">,</span> <span class="s2">"Q2"</span><span class="p">,</span> <span class="s2">"Q3"</span><span class="p">,</span> <span class="s2">"Q4"</span><span class="p">],</span>
+        <span class="s2">"unit_label"</span><span class="p">:</span> <span class="s2">"quarterly"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;week&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;col_attr&quot;</span><span class="p">:</span> <span class="s2">&quot;isocalendar_week&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;col_count&quot;</span><span class="p">:</span> <span class="mi">53</span><span class="p">,</span>
-        <span class="s2">&quot;col_labels&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">54</span><span class="p">)],</span>
-        <span class="s2">&quot;unit_label&quot;</span><span class="p">:</span> <span class="s2">&quot;weekly&quot;</span><span class="p">,</span>
+    <span class="s2">"week"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"col_attr"</span><span class="p">:</span> <span class="s2">"isocalendar_week"</span><span class="p">,</span>
+        <span class="s2">"col_count"</span><span class="p">:</span> <span class="mi">53</span><span class="p">,</span>
+        <span class="s2">"col_labels"</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">54</span><span class="p">)],</span>
+        <span class="s2">"unit_label"</span><span class="p">:</span> <span class="s2">"weekly"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -685,42 +679,40 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_returns_heatmap</span><span class="p">(</span>
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span>
+    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">"month"</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Year-by-``period`` heatmap of compounded returns.</span>
+<span class="w">    </span><span class="sd">"""Year-by-``period`` heatmap of compounded returns.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns. Best results when the</span>
 <span class="sd">            input has a ``DatetimeIndex``; otherwise the function</span>
-<span class="sd">            assumes daily (&#39;B&#39;) frequency starting at 2000-01-01.</span>
-<span class="sd">        period: Calendar bucket per cell — ``&quot;month&quot;`` (default),</span>
-<span class="sd">            ``&quot;quarter&quot;``, or ``&quot;week&quot;`` — or a</span>
+<span class="sd">            assumes daily ('B') frequency starting at 2000-01-01.</span>
+<span class="sd">        period: Calendar bucket per cell — ``"month"`` (default),</span>
+<span class="sd">            ``"quarter"``, or ``"week"`` — or a</span>
 <span class="sd">            :class:`finance_enums.Frequency` value.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the heatmap.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-    <span class="n">freq</span> <span class="o">=</span> <span class="n">to_frequency</span><span class="p">(</span><span class="n">period</span><span class="p">)</span> <span class="k">if</span> <span class="n">Frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">freq</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">Frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">freq</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">to_frequency</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_HEATMAP_PERIOD_SPEC</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plot_returns_heatmap: period=</span><span class="si">{</span><span class="n">period</span><span class="si">!r}</span><span class="s2"> not supported (expected one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_HEATMAP_PERIOD_SPEC</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"plot_returns_heatmap: period=</span><span class="si">{</span><span class="n">period</span><span class="si">!r}</span><span class="s2"> not supported (expected one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_HEATMAP_PERIOD_SPEC</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">_HEATMAP_PERIOD_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="n">values</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">to_returns_and_index</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
     <span class="n">dt_index</span> <span class="o">=</span> <span class="n">_datetime_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">dt_index</span><span class="p">)</span>
-    <span class="n">bucketed</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">_resample_rule</span><span class="p">(</span><span class="n">key</span><span class="p">))</span><span class="o">.</span><span class="n">prod</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span>
-    <span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;col_attr&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;isocalendar_week&quot;</span><span class="p">:</span>
+    <span class="n">bucketed</span> <span class="o">=</span> <span class="n">_period_returns</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">dt_index</span><span class="p">),</span> <span class="n">period</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s2">"col_attr"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"isocalendar_week"</span><span class="p">:</span>
         <span class="n">col_vals</span> <span class="o">=</span> <span class="n">bucketed</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isocalendar</span><span class="p">()</span><span class="o">.</span><span class="n">week</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">col_vals</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">bucketed</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;col_attr&quot;</span><span class="p">])</span>
-    <span class="n">table</span> <span class="o">=</span> <span class="n">bucketed</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">bucketed</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col_vals</span><span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;col_count&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">col_vals</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">bucketed</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">spec</span><span class="p">[</span><span class="s2">"col_attr"</span><span class="p">])</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">bucketed</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">bucketed</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col_vals</span><span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"year"</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">"col"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">"sum"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">spec</span><span class="p">[</span><span class="s2">"col_count"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">table</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
@@ -731,22 +723,22 @@
     <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">else</span> <span class="mf">1.0</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
         <span class="n">arr</span><span class="p">,</span>
-        <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdYlGn&quot;</span><span class="p">,</span>
+        <span class="n">aspect</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s2">"RdYlGn"</span><span class="p">,</span>
         <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span>
         <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;col_labels&quot;</span><span class="p">][:</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s2">"col_labels"</span><span class="p">][:</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;unit_label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> return (%)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;unit_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns&quot;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'unit_label'</span><span class="p">]</span><span class="si">}</span><span class="s2"> return (%)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'unit_label'</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns"</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
@@ -757,35 +749,35 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_returns_bar</span><span class="p">(</span>
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span>
+    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">"year"</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot compounded returns by period as a bar chart.</span>
+<span class="w">    </span><span class="sd">"""Plot compounded returns by period as a bar chart.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
-<span class="sd">        period: Calendar bucket: ``&quot;day&quot;``, ``&quot;week&quot;``, ``&quot;month&quot;``,</span>
-<span class="sd">            ``&quot;quarter&quot;``, or ``&quot;year&quot;``.</span>
+<span class="sd">        period: Calendar bucket: ``"day"``, ``"week"``, ``"month"``,</span>
+<span class="sd">            ``"quarter"``, or ``"year"``.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">period_returns</span> <span class="o">=</span> <span class="n">_period_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">_period_key</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">"label"</span><span class="p">]</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;#2ca02c&quot;</span><span class="p">,</span> <span class="s2">&quot;#d62728&quot;</span><span class="p">)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"#2ca02c"</span><span class="p">,</span> <span class="s2">"#d62728"</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">period_returns</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;return (%)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"return (%)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
@@ -796,36 +788,36 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_returns_dist</span><span class="p">(</span>
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span>
+    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">"month"</span><span class="p">,</span>
     <span class="n">bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot a histogram of compounded period returns.</span>
+<span class="w">    </span><span class="sd">"""Plot a histogram of compounded period returns.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
-<span class="sd">        period: Calendar bucket: ``&quot;day&quot;``, ``&quot;week&quot;``, ``&quot;month&quot;``,</span>
-<span class="sd">            ``&quot;quarter&quot;``, or ``&quot;year&quot;``.</span>
+<span class="sd">        period: Calendar bucket: ``"day"``, ``"week"``, ``"month"``,</span>
+<span class="sd">            ``"quarter"``, or ``"year"``.</span>
 <span class="sd">        bins: Histogram bin count.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">period_returns</span> <span class="o">=</span> <span class="n">_period_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">_period_key</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">"label"</span><span class="p">]</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#1f77b4"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#d62728&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribution of </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> returns&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;return (%)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#d62728"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"mean"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Distribution of </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> returns"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"return (%)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
@@ -836,29 +828,29 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_returns_timeseries</span><span class="p">(</span>
     <span class="n">returns</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span>
+    <span class="n">period</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">"month"</span><span class="p">,</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot compounded period returns through time.</span>
+<span class="w">    </span><span class="sd">"""Plot compounded period returns through time.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        returns: 1-D series of periodic returns.</span>
-<span class="sd">        period: Calendar bucket: ``&quot;day&quot;``, ``&quot;week&quot;``, ``&quot;month&quot;``,</span>
-<span class="sd">            ``&quot;quarter&quot;``, or ``&quot;year&quot;``.</span>
+<span class="sd">        period: Calendar bucket: ``"day"``, ``"week"``, ``"month"``,</span>
+<span class="sd">            ``"quarter"``, or ``"year"``.</span>
 <span class="sd">        ax: Existing matplotlib ``Axes`` to draw onto.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The ``matplotlib.figure.Figure`` containing the plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">period_returns</span> <span class="o">=</span> <span class="n">_period_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">_period_key</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">_PERIOD_RETURN_SPEC</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">"label"</span><span class="p">]</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_new_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">period_returns</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns over time&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;return (%)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">period_returns</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">period_returns</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#1f77b4"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> returns over time"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"return (%)"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">fig</span></div>
@@ -895,7 +887,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
