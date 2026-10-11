@@ -51,6 +51,7 @@ develop = [
     "finance-datagen>=0.3.2,<0.4",
     "hatchling",
     "mdformat",
+    "mdformat-frontmatter",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
@@ -88,7 +89,7 @@ replace = 'version = "{new_version}"'
 [tool.coverage.run]
 branch = true
 omit = [
-    "finance_plots/tests/integration/",
+    "finance_plots/tests/integration/*",
 ]
 
 [tool.coverage.report]
