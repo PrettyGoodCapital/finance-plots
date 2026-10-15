@@ -105,7 +105,7 @@ def test_period_plots_fallback_to_realistic_dates_for_numpy(returns_series):
     assert all(not label.startswith("1970") for label in bar_labels)
 
     timeseries = fp.plot_returns_timeseries(returns, period="month")
-    first_x = timeseries.axes[0].lines[0].get_xdata()[0]
+    first_x = np.asarray(timeseries.axes[0].lines[0].get_xdata())[0]
     assert pd.Timestamp(first_x).year == 2000
 
 

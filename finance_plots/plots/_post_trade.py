@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,7 +15,7 @@ __all__ = ["plot_execution_quality", "plot_mfe_mae_scatter", "plot_trading_cost_
 
 def _new_axes(ax: Axes | None, *, figsize: tuple[float, float] = (8.0, 4.0)) -> tuple[Figure, Axes]:
     if ax is not None:
-        return ax.figure, ax
+        return cast(Figure, ax.figure), ax
     fig, ax = plt.subplots(figsize=figsize)
     return fig, ax
 

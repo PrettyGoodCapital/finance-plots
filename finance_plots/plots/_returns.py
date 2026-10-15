@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import finance_calcs as fc
 import matplotlib.pyplot as plt
@@ -32,7 +32,7 @@ __all__ = [
 
 def _new_axes(ax: Axes | None) -> tuple[Figure, Axes]:
     if ax is not None:
-        return ax.figure, ax
+        return cast(Figure, ax.figure), ax
     fig, ax = plt.subplots(figsize=(10, 4))
     return fig, ax
 
@@ -382,7 +382,7 @@ def plot_drawdown_underwater(
     return fig
 
 
-_HEATMAP_PERIOD_SPEC = {
+_HEATMAP_PERIOD_SPEC: dict[str, dict[str, Any]] = {
     "month": {
         "col_attr": "month",
         "col_count": 12,

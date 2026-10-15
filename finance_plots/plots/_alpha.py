@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from statistics import NormalDist
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,7 +28,7 @@ __all__ = [
 
 def _new_axes(ax: Axes | None, *, figsize: tuple[float, float] = (8.0, 4.0)) -> tuple[Figure, Axes]:
     if ax is not None:
-        return ax.figure, ax
+        return cast(Figure, ax.figure), ax
     fig, ax = plt.subplots(figsize=figsize)
     return fig, ax
 
