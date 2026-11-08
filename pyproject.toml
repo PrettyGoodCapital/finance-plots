@@ -51,7 +51,7 @@ develop = [
     "finance-datagen>=0.3.2,<0.4",
     "hatchling",
     "mdformat",
-    "mdformat-frontmatter",
+    "mdformat-myst",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
